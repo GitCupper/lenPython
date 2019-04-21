@@ -1,5 +1,14 @@
 # encoding:utf-8
-str = "GoodBoy"
+first_name = "John"
+last_name = "Snow"
 print("Hello python")
 print("这里是Python的编程世界！")
-print(str)
+print(first_name + " " + last_name)
+
+# 格式化字符
+str1 = "John Q. %s" % ("Public")
+str2 = "%s %s %s" % ("Alice", "Bob", "Candy")
+str3 = "%s, %d\n" % ("Result:", 24)
+print(str1)
+print(str2)
+print(str3)
