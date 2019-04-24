@@ -14,3 +14,7 @@ print(str2)
 print(str3)
 
 print("CHERRY")
+if first_name == "David":
+    print("Wrong man.")
+else:
+    print("It is right.")
