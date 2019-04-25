@@ -1,6 +1,6 @@
 # Python编程入门经典
 
-![python log](https://i.loli.net/2019/04/23/5cbefbf7caf30.jpeg)
+![python log](https://public-download.csdn.net/uploads_album/sourcebanner/books/books_6846632.jpg)
 
 ## 作者简介
 James Payne居住在佛罗里达州马盖特市，他是Developer Shed公司的主编，从7岁起就开始写作和编程。James精通多门语言，已经撰写了400余篇文章，囊括了几乎每一种主流编程语言。James的工作是使用Python为金融业开发专有软件，在业余时间 他喜欢涉猎Django方向的知识。
