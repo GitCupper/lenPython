@@ -43,3 +43,33 @@ Python是一种解释型语言。当前的主流版本分为Python2与Python3，
 #!/usr/bin/python3
 ```
 而后修改.py文件的权限`chmod +x hello.py`，即可实现脚本的可执行，使用`./hello.py`即可以运行这个脚本。
+
+## 2.2 关于代码的规范问题
+* Python官方提供有一系列PEP（Python Enhancement Proposals）文档
+* 其中第8篇文档专门针对**Python的代码格式**给出了建议，也就是俗称的PEP 8
+* 文档地址：[https://www.python.org/dev/peps/pep-0008/](https://www.python.org/dev/peps/pep-0008/)
+* 谷歌有对应的中文文档：[http://zh-google-styleguide.readthedocs.io/en/latest/google-python-styleguide/python_style_rules/](http://zh-google-styleguide.readthedocs.io/en/latest/google-python-styleguide/python_style_rules/)
+
+# Python语法
+
+## 算数运算符
+### 01.算数运算符
+* 算数运算符是运算符的一种
+* 是完成基本的算术运算使用的符号，用来处理四则运算
+
+|运算符|描述|实例|
+|:---:|:---:|:---|
+| + | 加 |10 + 20 = 30|
+| - | 减 |10 - 20 = -10|
+| * | 乘 |10 * 20 = 200|
+| / | 除 |10 / 20 = 0.5|
+| // | 取整除 |返回除法的整数部分（商） 9 // 2 输出结果为：4|
+| ％ | 取余数 |返回除法的余数 9 % 2 = 1|
+| ** | 幂 |双称次方、乘方，2 ** 3 = 8|
+
+**技巧**
+在Python中可以使用`**`来操作字符串，可以输出多个同样的字符
+``` python
+print("-" * 80)
+```
+这段代码可以一次性的输出80个"-"。

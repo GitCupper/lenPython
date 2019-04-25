@@ -2,12 +2,12 @@
 
 str01 = "%d, %s" % (1, "Alice")
 
-// Python的布尔值
+# Python的布尔值
 flag = True
 
 if flag:
     print("这是真的")
 else:
-    printl("这是假的")
+    print("这是假的")
 
 print(str01)
