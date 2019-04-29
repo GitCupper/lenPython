@@ -1267,6 +1267,117 @@ Python包含几个特殊类型。前面已经介绍过它们，但在此仍有�
 ##### 3.3.2 序列的范围
 您可以获取序列的一部分，从中提取一个片段，创建可以单独使用的一个副本。创建这些分级的方法叫做分片（与对字符串进行相同操作时所用的术语相同）。当从一个列表或者元组中创建一个片段时，得到的片段与创建该片段的数据类型一致，从字符串分片的示例中已经看到了这一点。例如，从列表中创建的片段是一个列表，从元组中创建的片段是一个元组，字符串的片段还是字符串。
 
+@(**试一试**)[将序列分片]
+
+前面已经学过如何将字符串分片，下面试着用同样的方法对元组、列表和字符串进行分片，并看看结果是什么：
+``` python
+ >>> slice_me = ("The", "next", "time", "we", "meet", "drinks", "are", "on", "me")
+ >>> sliced_tuple = slice_me[5:9]
+ >>> print(sliced_tuple)
+ ('drinks', 'are', 'on', 'me')
+ >>> slice_this_list = ["The", "next", "time", "we", "meet", "drinks", "are", "on", "me"]
+ >>> sliced_list = slice_this_list[5:9]
+ >>> print(sliced_list)
+ ['drinks', 'are', 'on', 'me']
+ >>> slice_this_string = "The next time we meet, drinks are on me"
+ >>> sliced_string = slice_this_string[5:9]
+ >>> print(sliced_string)
+ 'ext '
+```
+** 示例说明 **
+
+在每种情形下，用冒号指定序列的一个片段指示Python创建一个新的序列，新序列恰好包含了片段中的元素。
+
+##### 3.3.3 通过附加序列增长列表
+假设希望将两个表连接在一起。我们还没看到专门用于这个目的的方法。不能用`append`方法将一个序列附加到另一个序列的末端，这样得到的结果是向列表中增加了一个分层的序列。
+``` python
+ >>> living_room = ("rug", "table", "chair", "TV", "dustbin", "shelf")
+ >>> apartment = []
+ >>> apartment.append(living_room)
+ >>> apartment
+ [('rug', 'table', 'chair', 'TV', 'dustbin', 'shelf')]
+```
+如果打算根据元组`living_room`的内容创建一个新的列表，并使用该列表创建包含`apartment`中所有元素的列表，以上所示并不是希望看到的结果。
+
+为了复制一个序列中的所有元素，可以使用列表和元组的`extend`方法，而不是`append`方法，`extend`方法将给定序列中的每个元素插入到调用它的列表中。
+``` python
+ >>> apartment = []
+ >>> apartment.extend(living_room)
+ >>> apartment
+ ['rug', 'table', 'chair', 'TV', 'dustbin', 'shelf']
+```
+
+##### 3.3.4 使用列表临时存储数据
+经常需要从其他来源获取数据，例如，用户输入的数据或者另外一台计算机上的信息。为此，最好将这些数据存放在一个列表中，这样就可以在随后按照数据进入列表的顺序对其进行处理。
+
+然而，在处理完 数据之后，不再需要将这些数据保存在于列表中，因为不再需要它们。特定时间有效的信息（例如证券报价信息、天气预报或者新闻标题等）都属于这类信息。
+
+为了防止列表变得笨重，可以使用`pop`方法在处理完列表的一个数据之后，将其引用从列表中删除。当删除引用之后，它原来在列表中占据的位置会填上后续元素，列表减少的元素个数等于已经弹出的元素个数。
+
+@(**试一试**)[从列表中弹出元素]
+
+需要告诉`pop`方法所要操作的元素。如果告知它处理元素`0`，它将弹出列表中的第一项，向`pop`传递参数`1`告诉它使用位置`1`的项（列表中的第二个元素），依此类推。`pop`所操作的元素与使用方括号访问的列表元素具有相同的索引（记住，列表中第一个元素的位置为`0`）：
+``` python3
+ >>> todays_temperatures = [23, 32, 33, 31]
+ >>> todays_temperatures.append(29)
+ >>> todays_temperatures
+ [23, 32, 33, 31, 29]
+ >>> morning = todays_temperatures.pop(0)
+ >>> print("This mornings temperature was %.02f" % morning)
+ This mornings temperature was 23.00
+ >>> late_morning = todays_temperatures.pop(0)
+ >>> print("Todays late morning temperature was %.02f" % late_morning)
+ Todays late morning temperature was 32.00
+ >>> noon = todays_temperatures.pop(0)
+ >>> print("Todays noon temperature was %.02f" % noon)
+ Todays noon temperature was 33.00
+ >>> todays_temperatures
+ [31, 29]
+```
+
+** 示例说明 **
+
+当弹出一个值时，如果操作是在秸的右端，可以将删除的元素赋给左边的值，或者仅在合适的情形下使用该值。如果没有将弹出的值赋给其他变量，也没所有使用它，它将被丢弃。
+
+通过只使用`pop`填充字符串格式，也可以避免使用中间名称，因为`pop`将返回列表中的指定元素，可以像已经指定了一个数值或者引用一个数值的名称那样使用该元素：
+``` python
+ >>> print("Afternoon temperature was %.02f" % todays_temperatures.pop(0))
+ Afternoon temperature was 31.00
+ >>> todays_temperatures
+ [29]
+```
+如果没有告诉`pop`要删除列表中的哪个元素（在上面的示例中是`0`），它将删除列表中的最后一个元素，而不是这里所示的第一个元素。
+
+##### 3.3.5 处理集合
+在Python中，集合与字典类似，只是它仅包含键，而没有与键相关联的值。本质上，集合是不包括重复数据的数据集。在从数据集删除重复数据时，集合非常有用。
+
+有两种类型的集合：可变集合与不可变集合（frozenset）。两者的不同之处在于，对于可变集合，可以增加、删除、或者改变它的元素，而不可变集合的元素在它们被初始设定之后就不能再被更改。
+
+@(**试一试**)[删除重复的元素]
+
+本例中执行了赋值操作，并且通过把这些值赋给一个集合删除了重复的地元素：
+``` python
+ >>> alphabet = ['a', 'b', 'b', 'c', 'a', 'd', 'e']
+ >>> print(alphabet)
+ ['a', 'b', 'b', 'c', 'a', 'd', 'e']
+ >>> alph2 = set(alphabet)
+ {'a', 'c', 'b', 'e', 'd'}
+```
+
+** 示例说明 **
+该示例接受数据集`alphabet`作为输入，并将其转换为一个集合。因为集合不允许重复的值，多余的字符`b`和`a`被删除。之后`alphabet`被赋给`alph2`，并且被打印以显示结果。
+
+#### 3.4 本章小结
+
+本章介绍了如何操作Python提供的多种核心类型。这些类型是元组、列表、字典、集合以及三种特殊类型：`None`、`True`和`False`。本章还介绍了可以将字符串当作序列处理的特殊方法。元组和列表是另外两种序列类型。
+
+元组是从`0`开始以固定数值顺序索引的一个数据序列。元组中的引用在元组被创建后不能再改变，也不能再增加或者删除元素。然而，如果元组包含可变元素的数据类型，例如列表，该数据类型的元素是可以改变的。元组在序列中的数据不会改变时很有用，例如，当希望地阻止数据被意外改变时。
+
+列表是另一种序列，除了它的元素可被修改之外，它与元组类似。列表的长度可以改变，以容纳使用`append`方法新增加的元素，另外也可以通过`pop`方法缩减列表的长度。如果希望将一个序列中的数据附加到一个列表中，可以使用列表的`extend`方法一次性将序列中的所有元素添加到列表中。
+
+字典是另外一种有索引的数据分组。列表和元组以数值为索引，而字典通过所选的值索引。如果想研究这些索引（叫做键），可以调用`keys`方法。为了研究被引用的数据（叫做值），可以使用`values`方法。这两个方法都返回列表。
+
+
 
 
 
