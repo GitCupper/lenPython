@@ -251,7 +251,7 @@ Python语言的一个目标就是实现模块化编程，这就使得可以通�
 
 尝试输入一些字符串。每当输入一个语句后，按下回车键让Python计算输入的语句。
 
-@(**试一试**)[用不同的引号输入字符串]
+@(<Inbox>)[用不同的引号输入字符串, 用加号串联字符串, 更多字符串格式, 对不同的数值使用type, 创建虚数, 在字符串中包含不同的数字, 在字符串中将%符号转义, 基本算术, 使用取余运算, 打印结果, %f格式说明符, 使用数学运算, 使用数字格式, 出错, 将数字格式化为八进制和十六进制, 给名称赋值, 创建和使用元组, 通过一个元组访问另外一个元组, 查看列表中的元素, 创建字典]
 
 输入如下字符串，记住引号的类型（单引号或双引号）和行的末端（到达行的末端时使用回车键）：
 ``` python
@@ -808,7 +808,352 @@ Python还为数值提供了另外一个值得了解的特性，以便在遇到�
 还有另外一个地方需要解释。十六进制使用`0～15`的数字，但是因为`9`这之后就没有数字了，所以十六进制用了字母`a～f`。如果使用格式说明符`%x`，这些字母是小写的；如果使用`%X`，它们则是大写的。因此，十进制的`0～19`用十六进制表示为：`0、1、2、3、4、5、6、7、8、9、a、b、c、d、e、f、10、11、12、13`。
 
 #### 2.4 本章小结
-本章介绍了Python中的数值，
+本章介绍了Python中的数值，但是没有涵盖数值的所有方面。我们看到并使用了3种 Python内置的数字：整型数、浮点型数以及虚数。本章还介绍了如何用字符串格式说明符在字符串中包含数值，并且使用不同风格格式化了这些数值。
+
+要重点记住，数值的格式（数值在字符串中的显示方式）并不会改变其值。即使打印成整型，浮点数仍然是浮点数，反之亦然。
+
+本章执行了主要的内置的数学运算：加、减、乘、除以及取余。还介绍了如果整型和浮点型混合，结果为浮点型，如果两个整型数相除，可能也将适当地返回一个浮点型数。如果将整型或者浮点型数与虚数结合起来做数学运算，结果将是一个复数，复数分别有实部和虚部。本章还示范了`type`函数，该函数可以确定数值的类型。
+
+最后，人们通常使用十进制数，而Python很容易将数值转换为八进制或者十六进制。
+
+** 本章要点： **
+* Python中有3种数值类型。它们分别是：整型数，即整数（正数和负数）；浮点型数，即带小数值的数；虚数，即`-1`的平方根，经常用于工程和物理计算。
+* 当用于字符串时，`+`操作符可以将两个或多个字符串串联。例如，语句`print("Hello," + "how are you?")`的结果是一句话：“Hello, how are?”。
+* 可以使用`str`函数将数值转换为字符串。
+* 将两个整形数相除有时可能得到一个浮点型数（例如，3/2）。用一个浮点数除一个整型数，总会得到一个浮点数。
+* 取余运算符（`%`）用来返回一则除法中的余数。例如，`5%2`将返回`1`.
+* 计算中使用括号可以帮助确保以正确的顺序求值。
+
+#### 2.5 习题
+在记事本中完成前3个习题，并将结果保存于文件`ch2_exercises.py`中。在Python中，可以打开文件，选择Run Moudle运行它们。
+1. 在Python Shell中，将`5`和`10`相乘。并尝试其他数值。
+2. 打印数字6~14的八进制形式。
+3. 打印数字9~19的十六进制形式。
+4. 尝试从Python解释器中引出其他错误，例如故意将`print`拼错为`pinrt`。注意，在Python Shell的文件上工作时，它以不同方式显示`print`和`pinrt`。
+
+### 第3章 变量
+在前两章中，您学习了Python如何 看待字符串、整型、浮点型和虚数，以及如何创建和显示它们。本章将给出更多的示例，说明这些数据类型的用法。
+
+本章将介绍：
+* 使用名称存储已经了解的以及即将介绍的类型。
+* 如何处理还未学习的不同类型的对象，如变量以及不同的新类型，学习本章后您将更加熟悉列表、无组和字典。
+* 引用的概念及示例。
+* 学习本章的重点是，应当新手输入示例代码并且更改它们，观察会发生什么。
+
+#### 3.1 引用数据——使用数据的名称
+在程序中总是地写字符串和数值是非常困难的，因为这迫使程序员记住所有的字符和数值等。计算机的内存使得它可以比人记住更多的细节，利用计算机的这种能力是编程中一个很大的部分。然而，为了更灵活简单地使用数据，可以给数据命名，之后可以用名称引用这些数据。
+
+@(**试一试**)[给名称赋值]
+
+这些名称一般叫做变量，表明它们引用的数据可以变化，而名称保持不变。您会看到变量也叫做名称（name），这是Python的叫法。
+``` python
+ >>> first_string = "This is a string"
+ >>> second_string = "This is another string"
+ >>> first_number = 4
+ >>> second_number = 5
+ >>> print("The first variables are %s, %s, %d, %d" % (first_string, second_string, first_number, second_number))
+ The first variables are This is a string, This is another string, 4, 5
+```
+
+** 示例说明 **
+
+可以用等号（=）将一个值（字符串或整型数）与名称关联。所用的名称并不与所指的数据直接相关（如果将一个数据命名为“number”，并不意味着它实际保存了一个数值。）
+``` python
+ >>> first_string = 245
+ >>> second_number = "This isn't a number"
+ >>> print(first_string)
+ 245
+ >>> print(second_number)
+ "This isn't a number"
+```
+注意，仅希望将一个变量的值打印出来时并不需要使用引号。如果在`print()`函数中将一个变量用引号括起来，函数会打印出这个变量的名称，而不是它的内容，这是因为程序把它看做一个字符串而不是一个变量。命名数据的好处是可以赋予它一个有着某种含义的名称。给数据起一个有意义的名称非常有必要，它可以说明数据所包含的内容，或者数据在程序中的使用方式 。如果打算清点家里所有的灯泡，您也许希望有一段程序包含壁橱中的灯泡数量，另外还有一段程序包含正在使用的灯泡的数量：
+``` python
+ >>> lightbulbs_in_closet = 10
+ >>> lightbulbs_in_lamps = 12
+```
+使用灯泡时，把它们从壁橱中移到灯中，还可以给今年已经扔掉的灯泡数起一个名称，这样在年终，就会知道买了多少灯泡，瑞在有多少，以及使用过多少；当想知道还有多少灯泡时，只需要引用`lightbulbs_in_closet`或者`lightbulbs_in_lamps`即可。
+
+当名称与其存储的值相关联时，就创建了一个非正式的索引，这样就可以查询并且记住信息存储的位置，从而便于在程序中使用它们。
+
+##### 3.1.1 使用名称修改数据
+如果数据是一个数值或者是一个字符串，可以通过已经知道的一些可用的操作修改它们。
+
+@(**试一试**)[给名称赋值]
+
+我们学过的关于数值和字符串的所有操作都可用于变量名，这样可以像处理它们所引用的数值那样处理它们：
+``` python
+ >>> proverb = "A penny saved"
+ >>> proverb = proverb + " is a penny earned"
+ >>> print(proverb)
+ A penny saved is a penny earned
+ >>> pennies_saved = 0
+ >>> pennies_saved = pennies_saved + 1
+ >>> print(pennies_saved)
+ 1
+ print(pennies_saved + 1)
+ 2
+```
+** 示例说明 **
+无论何时，在等号的右端使用已命名的值时，即使同样的名称出现在等号的左端，Python仍将这些名称看做它们所引用的值。当Python遇到这样的情况时，它首先对右边的名称求值并计算结果，然后将结果赋给左边的名称。这样，名称同时出现在等号两端时就不再引起混乱，Python会执行正确的操作。
+
+##### 3.1.2 复制数据
+给数据起的名称仅仅是个名称，是表示要访问的数据的一种方法。这意味着可以用多个名称引用同一个数据：
+``` python
+ >>> pennies_saved=1
+ >>> pennies_earned = pennies_saved
+ >>> print(pennies_earned)
+ 1
+```
+当再次使用`=`号时，就给名称赋予了一个已创建的新值，而另一个名称仍然指向原来的值。
+``` python
+ >>> pennies_saved = pennies_saved + 1
+ >>> print(pennies_saved)
+ 2
+ >>> print(pennies_earned)
+ 1
+```
+
+##### 3.1.3 禁用的名称以及一些规则
+Python把一些名称作为特殊的内置词，它保留这些词用于特殊用途以防止出现多义性。下面列出了Python的保留词，不可以将它们用作数据的名称：
+``` python
+ and, as, assert, break, class, continue, def, del, elif, else,
+ except, exec, False, finally, for, from, global, if, import, in,
+ is, lambda, not, None, or, pass, print, raise, return, try, True,
+ while, with, yield
+```
+另外，数据的名称不能以数值或者多数非字母的字符开头（例如逗号、加减号和斜杠等），但下划线例外。下划线是合法的，甚至在某些情形下有特殊含义（特别是用于类和模块时，详见第6章以及后续章节）。
+
+在本章后面的讨论中将会看到许多这样特殊的保留字。在使用Python完成各式各样的任务时，它们非常重要。
+
+#### 3.2 使用更多的内置类型
+除了字符串和数值之外，Python还提供了另外4种重要的基本类型：无组、列表、集合和字典。这4种类型有许多共同点，因为它们都允许在一个名称下面组织多条数据。因为具有这种组织性，每个类型都允许在它们中查找元素。这些组织在一起的数据通过圆括号`()`、方括号`[]`和花括号`{}`表示。
+> 在写程序或者读别人的程序时，如果看到一组元素，注意所使用的括号的类型是很重要的。`{}`、`[]`和`()`的区别非常重要。
+
+##### 3.2.1 元组——不可更改的数据序列
+在第1章和第2章中为字符串中的多个格式说明符赋值时，看到了元组（tuple）的应用。元组是值的序列，其中每个值都可以被单独访问，元组是Python的基本类型。在创建时就可以识别出元组，因为它们被圆括号包围：
+``` python
+ >>> print("A %s %s %s %s" % ("string", "filled", "by a", "tuple"))
+ A string filled by a tuple
+```
+
+@(**试一试**)[创建和使用元组]
+
+元组包含对数据的引用，例如对字符串和数值的引用。然而，虽然它们引用数据，但是仍然可以像其他类型的数据一样为它们命名：
+``` python
+ >>> filler = ("string", "filled", "by a", "tuple")
+ >>> print("A %s %s %s %s" % ("string", "filled", "by a", "tuple"))
+ A string filled by a tuple
+```
+注意，可以通过在`print()`函数中简单地调用元组，打印出其中的数据。尝试如下代码并观察结果：
+``` python
+ >>> filler = ("string", "filled", "by a", "tuple")
+ >>> print(filler)
+ ('string', 'filled', 'by a ', 'tuple')
+```
+可以看到，组成元组的4个部分被返回。这种技术在每次想查看组成元组的单个部分时非常有用。
+
+** 示例说明 **
+从上面的示例可以看出，filter（包含字符串的元组）的处理方式好像是它的元素都呈现出来并且被字符串用来填充格式说明符，因为元组的处理方式就好像输入一个序列来满足给定的格式规范。
+
+可以访问元组中的单个值。每个元素引用的值可以通过该语言的解除引用特性直接访问。通过在元组的名称后放置方括号并且从零起计算出要引用的元素的位置，可以解除元组中对值的引用。因此，元组中第一个元素的位置是`0`，第二个元素的位置是`1`，第三个元素的位置是`2`，以此类推走到最后一个元素：
+``` python
+ >>> a = ("first", "second", "third")
+ >>> print("The first element of the tuple is %s" % a[0])
+ The first element of the tuple is first
+ >>> print("The second element of the tuple is %s" % a[1])
+ The second element of the tuple is first
+ >>> print("The third element of the tuple is %s" % a[2])
+ The third element of the tuple is first
+```
+元组知道它所包含的元素的数目，可以使用内置函数`len`得到这个数目：
+``` python
+ >>> print("%d" % len(a))
+ 3
+```
+这将返回元组中元素的数目（此处是3），因此需要记住`len`函数从`1`开始计数，但当访问元组时，由于元组从`0`开始计数，所以必须在比`len`返回的数小`1`的位置停止访问。
+``` python
+ >>> print(a[len(a) - 1])
+ Third
+```
+元组中的一个元素也可以是对另外一个元组的引用。换句话说，可以创建嵌套元组：
+``` python
+ >>> b = (a, "b's second element")
+ >>> print(b)
+ (('first', 'second', 'third'), "b's second element")
+```
+现在可以通过在第一组方括号后面加上另外一组方括号来访问元组a中的元素，访问a中的第二个元素与访问第一个元素的方法相同，仅需再添加一组方括号即可。
+
+@(**试一试**)[通过一个元组访问另外一个元组]
+
+重新创建元组a和b，以便观察如何通过一个元组访问另外一个元组。嵌套的序列有时也被称具有多维，因为它们是两层，可以想象纵向和横向延伸，就像图纸或者电子表格上的二维风格一样。再增加第三层元组可被认为是三维的，像一堆积木一样。可视化超过三维的多维数据会令人头痛，将它们看做多层的嵌套的数据会好一些。
+``` python
+ >>> a = ("first", "second", "third")
+ >>> b = (a, "b's second element")
+ >>> print("%s" %b[1])
+ b's second element
+ >>> print("%s" % b[0][0])
+ first
+ >>> print("%s" % b[0][1])
+ second
+ >>> print("%s" % b[0][2])
+ third
+```
+
+** 示例说明 **
+在每种情形下，代码的工作原理仿佛是先遵循元组b的第一个元素的引用，之后遵循第二层元组中的每个值的引用（第二层的元组最初来源于元组a）。如同执行了如下操作一样：
+``` python
+ >>> a = ("first", "second", "third")
+ >>> b = (a, "b's second element")
+ >>> layer2 = b[0]
+ >>> print(layer2[0])
+ 'first'
+ >>> print(layer2[1])
+ 'second'
+ >>> print(layer2[2])
+ 'third'
+```
+注意，元组从被创建起就存在一个奇怪的地方。若要创建包含一个元素的元组，必须在该元素之后加一个逗号：
+``` python
+ >>> single_element_tuple = ("the sole element",)
+```
+否则，将会创建一个字符串，在之后试图访问它时容易混淆。
+
+元组可以包含各种类型的数据，但在创建之后，就不能再改变。元组是不可变的，Python中还有几个类型是不可变的（例如，字符串在创建之后是不可变的，那些看起来改变它们的操作实际上创建了新的字符串）。
+
+元组是不可变的，因为它们用来存储一组有序的事物，这些事物在使用时是不可以更改的。试图更改元组中的元素将导致Python报错，就像第2章末尾的错误一样。
+``` python
+ >>> a[1] = 3
+ Traceback (most recent call last):
+   File "<stdion>", line 1, in ?
+ TypeError: object does not support item assignment
+ >>> print("%s" % a[1])
+ second
+```
+在试图给元组中的元素赋值时，可以看到Python返回的错误是`TypeError`，意思是该类型并不支持此操作（等号会引起元组执行一个动作）。在这个示例中，试图使用元组`a`中的第二个元素引用一个整型数`3`，但这个却作将不会发生。相反，`a`保持不变。
+
+如果试图引用元组中并不存在的元素，将发生一个不相关错误。如果试图引用`a`中的第四个元素，将得到一条错误（记住，由于元组从`0`开始对它的元素计数，因此要用数字`3`来引用第四个元素。）
+``` python
+ >>> a[3]
+ Traceback (most recent call last):
+   File "<pyshell#27>", line 1, in <module>
+   a[3]
+ IndexError: tuple index out of range
+```
+注意，这是一个`IndexError`错误，并且对错误的解释也已给出（尽管它没有告诉超出范围的索引值，但确实可以知道自己试图用元组中并不存在的索引值访问其中的一个元素）。要在程序中修复该错误，必须找出试图访问的值以及元组中元素的数目。相对于不提供错误提示的语言，Python使用找出这些错误变得容易。
+
+##### 3.2.2 列表——可以更改的数据序列
+列表如同元组，是包含从`0`开始引用的元素的序列。列表用方括号创建：
+``` python
+ >>> breakfast = ["coffee", "tea", "toast", "egg"]
+```
+
+@(**试一试**)[查看列表中的元素]
+
+列表中的单个元素的访问方法与元组类似。像元组一样，列表中的元素从`0`开始引用，并且访问顺序也是从`0`开始直到末端。
+``` python
+ >>> count = 0
+ >>> print("Today's breakfast is %s" % breakfast[count])
+ Today's breakfast is coffee
+ >>> count = 1
+ >>> print("Today's breakfast is %s" % breakfast[count])
+ Today's breakfast is tea
+ >>> count = 2
+ >>> print("Today's breakfast is %s" % breakfast[count])
+ Today's breakfast is toast
+ >>> count = 3
+ >>> print("Today's breakfast is %s" % breakfast[count])
+ Today's breakfast is egg
+```
+
+** 示例说明 **
+当顺序访问列表中的多个元素时，有必要使用一个名称来存储目前在列表中所处的位置。在简单的示例中，应当采取这种做法以形成一种 习惯，实际中则总是会这样做。通常，用循环方法查看序列中的每一个元素（第4章将详细讨论循环）。
+
+本例中手动完成了对`count`引用的值加`1`的工作，以遍历早餐列表中的每个元素，列出本周中4在的特色早餐。因为递增计数，不论`count`引用的数是什么，它都是早餐列表中被访问的元素索引。
+
+使用列表与使用元组主要的区别在于，元组在创建后不可以修改，列表在任何时刻者可以被修改：
+``` python
+ >>> breakfast[count] = "sausages"
+ >>> print("Today's breakfast is %s" % breakfast[count])
+ Today's breakfast is sausages
+```
+不仅可以修改列表中已经存在的元素，还可以向列表中添加需要的元素。可以用列表类型的内置方法`append`向列表末端添加元素。利用`append`方法每次只能向列表末端添加一个元素：
+``` python
+ >>> breakfast.append("waffles")
+ >>> count = 4
+ >>> print("Today's breakfast is %s" % breakfast[count])
+ Today's breakfast is waffles
+```
+如果希望一次性地向列表末端添加多个元素，例如一个元组或者其他列表的内容，可以使用`extend`方法。添加的列表并不是整体地作为原有列表的一个元素，相反，其中的每个元素将被复制到原来的列表中。
+``` python
+ >>> breakfast.extend(["juice", "decaf", "oatmeal"])
+ >>> print(breakfast)
+ ['coffee', 'tea', 'toast', 'egg', 'waffle', 'juice', 'decaf', 'oatmeal']
+```
+同元组一样，不可以请求列表以外的元素，但是出错消息与元组略有不同，因为错误消息将指出是列表索引超出范围，而不是元组索引超出范围。
+``` python
+ >>> count = 8
+ >>> print("Today's breakfast is %s" % breakfast[count])
+ Trackback (most recent call last):
+   File "<pyshell#18>", line 1, in <module>
+   print("Today's breakfast is %s" % breakfast[count])
+ IndexError: list index out of range
+```
+列表的长度也通过`len`函数确定。就像元组一样，长度从`1`开始，而列表的第一个元素的位置从`0`开始。总是记住这一点非常重要。
+
+##### 3.2.3 字典——以名称索引的分组数据
+字典类似于列表和元组。它是包含一组数据的另外一种容器。然而，元组和列表以数字顺序索引，字典却用选择的名称索引。这些名称可以是字母、数值、字符串或者符号，自己认为合适即可。
+
+@(**试一试**)[创建字典]
+
+字典用花括号创建。刚开始，可以创建最简单的字典，即空字典，并通过逐行指定名称和值对它进行实例化。
+```python
+ >>> menus_specials = {}
+ >>> menus_specials["breakfast"] = "Canadian ham"
+ >>> menus_specials["lunch"] = "tuna surprise"
+ >>> menus_specials["dinner"] = "Cheeseburger Deluxe"
+```
+
+** 示例说明 **
+当初次为`menus_specials`赋值时，用花括号创建了一个空字典。一旦字典被定义并且通过名称引用，将开始使用如下方式对其实例化：将希望作为索引的名称放在方括号内，将通过该索引引用的值放在等号的右端。因为值由所选择的名称索引，所以可以使用上述形式给已经定义的任意字典分配索引和值。
+
+使用字典时，索引和值都有特殊的名称。字典中索引的名称叫做键，对应的值叫做值。为了创建一个完全指定（或者可以认为它是完全形成的）的字典（一开始就指定了键和值的字典），必须在花括号之间指定每个键以及和它对应的值，并以冒号分隔它们。例如，另外一天的特色菜可以一次性定义：
+``` python
+ >>> menu_specials = {"breakfast" : "sausage and eggs",
+ ... "lunch" : "split pea soup and gralic bread",
+ ... "dinner": "2 hot dogs and onion rings"}
+```
+为了打印出某个字典中所有的键与值，只需将字典的名称作为`print()`函数的参数，如下面的代码所求。为了访问字典中的值，可以将键放在方括号中。如果键是字符串，需要将键放在引号中。如果键是数值（可以用数值创建字典，这样的字典十分类似于列表和元组），仅使用数值就可以了。
+``` python
+ >>> print(menu_specials)
+ {'lunch':'split pea soup and garlic bread', 'breakfast':'sausage and eggs',
+ 'dinner': '2 hot dogs and onion rings'}
+ >>> print("%s" % menu_specials["breakfast"])
+ sausage and eggs
+ >>> print("%s" % menu_specials['lunch'])
+ split pea soup and garlic bread
+ >>> print("%s" % menu_specials["dinner"])
+ 2 hot dogs and onion rings
+```
+如果键是一个字符串，但是在方括号中意外地没有将键放在引号中，Python就试图将它看做一个名称，需要解除对它的引用来找到键。大部分情况下，这将引起`NameError`异常，除非凑巧找到了一个与该字符串相同的名称，但这时又可能得到一个`IndexError`错误。
+
+@(**试一试**)[创建字典]
+
+如果知道如何询问，字典可以告诉您它所有的键，或者所有的值。`keys`方法要求字典以视图的方式返回所有键，以便用户查找所需的键，`values`方法也将以视图的形式返回所有的值。
+``` python
+ >>> hungry=menu_specials.keys()
+ >>> print(list(hungry))
+ lunch
+ breakfast
+ dinner
+ >>> starving=menu_specials.value()
+ >>> print(list(starving))
+ split pea soup and garlic bread
+ sausage and eggs
+ 2 hot dogs and onion rings
+```
+
+** 示例说明 **
+`key`和`values`方法都返回视图，可以像其他常规的视图一样使用这些视图并为其赋值。如果从`keys`方法得到视图中的项，可以使用视图中的项（也就是键），得到字典中与之匹配的值。
 
 
 
@@ -816,7 +1161,14 @@ Python还为数值提供了另外一个值得了解的特性，以便在遇到�
 
 
 
-全文第【40】页
+
+
+
+
+
+
+
+全文第【57】页
 
 
 上传图片的免费实用图床网站：
