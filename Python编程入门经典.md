@@ -1153,7 +1153,68 @@ Python把一些名称作为特殊的内置词，它保留这些词用于特殊�
 ```
 
 ** 示例说明 **
-`key`和`values`方法都返回视图，可以像其他常规的视图一样使用这些视图并为其赋值。如果从`keys`方法得到视图中的项，可以使用视图中的项（也就是键），得到字典中与之匹配的值。
+`key`和`values`方法都返回视图，可以像其他常规的视图一样使用这些视图并为其赋值。如果从`keys`方法得到视图中的项，可以使用视图中的项（也就是键），得到字典中与之匹配的值。注意，尽管一个特定键可以找出一个值，但是不能从一个值开始可靠地找到与该值关联的键。当根据书籍的仅有的值试图寻找键时，需要彻底测试该值所有可能的键，尽管如此，仍可能存在两个不同的键与相同的值关联的情况。
+
+字典的工作原理是每个键都是不同的（不可以有完全相同的两个键），但是可以有多个重复的值：
+``` python
+ >>>menu={"breakfast": "spam", "lunch": "spam", "dinner": "Spam with a side of Spam"}
+ >>>print(menu)
+ {'lunch':'spam', 'breakfast':'spam', 'dinner':'Spam with a side of Spam'}
+ >>> menu.get("lunch")
+ 'spam'
+ >>> menu.get("breakfast")
+ "spam"
+```
+可见，Python允许在不同的键下有多个值。然而，尝试如下代码并观察会发生什么，这段代码试图用同样的名称创建不同的键：
+``` python
+ >>>menu2={"breakfast": "spam", "breakfast":"ham", dinner":"Spam with a side of Spam:"}
+ >>>menu2.get("breakfast")
+ 'ham'
+```
+这里发生了什么呢？尽管没有得到错误消息，代码中仍然有错误。当输入第二个叫做“breakfast”的键时，Python替换了相同名称的第一个键的值。
+
+##### 3.2.4 像列表一样处理字符串
+
+Python给字符串提供了一个有趣的特性。有时，能够将字符串当作单个字符的列表那样处理很有帮助。在字符串的末端有无关字符并不罕见。人们也许没有识别出它们，但计算机遇到它们时会挂起。仅需要看字符串的首字符就知道如何处理该字符串的情况也很常见。例如，如果有一个姓与名的列表，您可以使用与列表相同的语法查看名与姓的第一个字符。这种看待字符串的方法叫做分片（slicing），是Python比较有趣的一个特性。
+``` python
+ >>>last_names=["Douglass", "Jefferson", "Williams", "Frank", "Thomas"]
+ >>> print("%s" % last_names[0])
+ Douglass
+ >>> print("%s"% last_names[0][0])
+ D
+ >>> print("%s" % last_names[1])
+ Jefferson
+ >>> print("%s"% last_names[1][0])
+ J
+ >>> print("%s" % last_names[2])
+ Williams
+ >>> print("%s"% last_names[2][0])
+ W
+ >>> print("%s" % last_names[3])
+ Frank
+ >>> print("%s"% last_names[3][0])
+ F
+ >>> print("%s" % last_names[4])
+ Thomas
+ >>> print("%s"% last_names[4][0])
+ T
+```
+例如，可以根据字符串的字母顺序将字典中的元素以姓的首字母分组。并不需要做任何复杂的操作，只需要检查包含名字的字符串以哪个字母开头，并以此对名字归档即可。
+``` python
+ >>> by_letter = {}
+ >>> by_letter[last_name[0][0]] = last_name[0]
+ >>> by_letter[last_name[1][0]] = last_name[1]
+ >>> by_letter[last_name[2][0]] = last_name[2]
+ >>> by_letter[last_name[3][0]] = last_name[3]
+ >>> by_letter[last_name[4][0]] = last_name[4]
+```
+通过使用字符串的分片功能，字典`by_letter`仅包含所有姓的首字母。因此，`by_letter`是根据每个姓的首字母索引的字典。也可以令`by_letter`中的每个键引用一个列表，并使用列表`append`方法创建以相同字母开头的一列名字（当然，前提是您希望拥有一个索引了更大的一组名字的字典，其中每个名字都以相同的字母开头）。
+
+** 非常有用的字符串分片 **
+如果刚刚接触编程，字符串分片最初看上去是一个不同寻常的特性。使用过C或者C＋＋这样的低级语言的程序员学习过如何将程序中的字符串看做特殊的列表（在Python中也可以对列表分片，如后面所示），对他们而言，这个我很自然。对于读者而言，一旦学习了如何在列表上控制元素上控制元素的重复，它将是一个非常方便的工具。
+
+##### 3.2.5 特殊类型
+Python包含几个特殊类型。
 
 
 
@@ -1168,7 +1229,9 @@ Python把一些名称作为特殊的内置词，它保留这些词用于特殊�
 
 
 
-全文第【57】页
+
+
+全文第【58】页
 
 
 上传图片的免费实用图床网站：
