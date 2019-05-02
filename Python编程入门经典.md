@@ -1438,6 +1438,606 @@ Python包含几个特殊类型。前面已经介绍过它们，但在此仍有�
 
 当进行相等性比较时，Python比较双等号两端的值。如果数值不同，结果为`False`。如果数值相同，结果为`True`。
 
+即使数值类型不同，Python仍然能够比较它们并且给出正确的答案：
+``` python
+ >>> 1.23 == 1
+ False
+ >>> 1.0 == 1
+ True
+```
+也可以用双等号来测试两个字符串的内容是否相同，甚至可以将该测试限定在字符串的某个局部范围内（回忆上一章中介绍的分片，它复制了所引用的字符串的部分内容，因此实际上比较的两个字符串代表了分片所涵盖的内容）：
+``` python
+ >>> a = "Mackintosh apples"
+ >>> b = "Black Berries"
+ >>> c = "Golden Delicious apples"
+ >>> a == b
+ False
+ >>> b == c
+ False
+ >>> a[-len("apples"):-1] == c[-len("apples"):-1]
+ True
+```
+在Python中，序列也可以用双等号比较。Python认为，如果每个序列中同一位置的每个元素都相同，那么两个序列相等。因此，如果有两个序列中分别包含4项，这4项的数据相同，但顺序不同，那么这两个序列不相等：
+``` python
+ >>> apple = ["Mackintosh", "Golden Delicious", "Fuji", "Mitsu"]
+ >>> apple_trees = ["Golden Delicious", "Fuji", "Mitsu", "Mackintosh"]
+ >>> apples == apple_trees
+ False
+ >>> apple_tree = ["Mackintosh", "Golden Delicious", "Fuji", "Mitsu"]
+ >>> apples == apple_trees
+ True
+```
+另外，字典也可以比较。像列表一样，一个字典中的每个键与值（一组）必须与另外一个字典中的键与值一一对应，其中第一个字典中的键与第二个字典中的键相等，第一个字典中的值也与第二个字典中的值相等：
+``` python
+ >>> tuesday_breakfast_sold = {"pancakes":10, "french toast":4, "bagels":32, "omelets":12, "eggs and sausages":13}
+ >>> wednesday_breakfast_sold = {"pancakes":8, "french toast":5, "bagels":22, "omelets":16, "eggs and sausages":22}
+ >>> tuesday_breakfast_sold == wednesday_breakfast_sold
+ False
+ >>> thursday_breakfast_sold = {"pancakes":10, "french toast":4, "bagels":32, "omelets":12, "eggs and sausages":13}
+ >>> tuesday_breakfast_sold == thursday_breakfast_sold
+ True
+```
+
+#### 4.2 比较两个值是否不相等
+有一个运算与相等比较相反。如果将感叹号和等号一起使用，可以要求Python比较两个值是否不相等（使用与相等比较同样的规则），如果不相等，得到`True`值。
+
+@(**试一试**)[用加号串联字符串]
+
+尝试如下示例，观察Python如何对这些比较求值：
+``` python
+ >>> 3 == 3
+ True
+ >>> 3 != 3
+ False
+ >>> 5 != 4
+ True
+```
+** 示例说明 **
+
+如果一对数用`==`比较时得到`True`值，在这晨将得到`False`；如果两个数在用`==`比较时得到`False`，在这里将得到`True`。
+
+这些规则同样适用于更加复杂的类型，如序列和字典：
+``` python
+ >>> tuesday_breakfast_sold != wednesday_breakfast_sold
+ True
+ >>> tuesday_breakfast_sold != thursday_breakfast_sold
+ False
+```
+像数值一样，这些类型当用`==`比较为`True`时，在用`!=`比较时将为`False`。
+
+#### 4.3 比较两个值的大小
+相等性比较并不是找出希望知道的信息的唯一方法。有时，希望了解某物的数量是否大于另外一个，或者某个值是否小于另外一个值。Python提供了大于和小于运算，可以用`>`和`<`进行调用。这些符号与数学书上介绍的符号相同，用于比较左边的值是否大于（>）或者小于（<）右边的值。
+
+@(**试一试**)[比较大于和小于]
+
+``` python
+ >>> 5 < 3
+ False
+ >>> 10 > 2
+ True
+```
+
+** 示例说明 **
+
+左边的值与右边的值进行比较。也可以比较字母。在某些条件下，这些比较运算也许会得出意外的结果，例如尝试比较字母和数值（这个问题在许多情形下不会发生，所以您的期望与Python的期望不尽相同）。字母表中字母的值大概以这样的方式排序：大写的“A”是最小的字母，之后“B”，之后是“C”一直到“Z”。随后是小写字母，其中“a”是最小的小宝字母，“z”是最大的小写字母。然而，“a”大于“Z”：
+``` python
+ >>> "a" > "b"
+ False
+ >>> "A" > "b"
+ False
+ >>> "A" > "a"
+ >>> "b" > "A"
+ True
+ >>> "Z" > "a"
+ False
+```
+如果希望比较两个包含多个字符的字符串，Python将观察每个字母，走到找到一个不同的字母为止。比较的结果将取决于不同的字母。如果两个字符串完全不同，第一个字母就将决定结果：
+``` python
+ >>> "Zebra" > "aardvark"
+ False
+ >>> "Zebra" > "Zebrb"
+ False
+ >>> "Zebra" < "Zebrb"
+ True
+```
+通过使用字符串的特殊方法`lower`，可以避免比较两个相似单词由于大小写不同而引起的问题，`lower`方法可以将调用它的字符串中的所有字母都变为小写，然后返回一个新字符串。还有一个对应的`upper`方法。它们适用于Python中的所有字符串：
+``` python
+ >>> "Pumpkin" == "pumpkin"
+ False
+ >>> "Pumpkin".lower() == "pumpkin".lower()
+ True
+ >>> "Pumpkin".lower()
+ 'pumpkin'
+ >>> "Pumpkin".upper() == "pumpkin".upper()
+ True
+ >>> "pumpkin".upper()
+ 'PUMPKIN'
+```
+注意，也可以用如下方式编写上述代码：
+``` python
+ >>> "Pumpkin".lower() == "pumpkin"
+ True
+```
+由于“pumpkin”已经是小写的，就没有必要再改变它，尽管这样做可能更安全。例如。如果某人错误地输入了一个字符串，将字符串中的某个字母大写，将两者都进行大小写转换可以避免一些错误。观察如下代码：
+``` python
+ >>> "Pumpkin".lower() == "puMpkin"
+ False
+ >>> "Pumpkin".lower() == "puMpkin".lower()
+ True
+```
+当通过名称引用字符串时，仍旧可以访问字符串通常具有的所有方法：
+``` python
+ >>> gourd = "Calabash"
+ >>> gourd
+ 'Calabash'
+ >>> gourd.lower()
+ 'calabash'
+ >>> gourd.upper()
+ 'CALABASH'
+```
+
+** 大于等于和小于等于 **
+
+大于和小于各有一个有用的变体，即大于等于和小于等于。以某种方式将两个符号结合使用时显得很有意义：
+``` python
+ >>> 1 > 1
+ False
+ >>> 1 >= 2
+ False
+ >>> 10 < 10
+ False
+ >>> 10 <= 10
+ True
+```
+
+#### 4.4 对真值和假值取反
+在创建一种情形并比较其结果时，有时希望知道结果是否为真，有时希望知道结果是否不为真。Python提供了一个操作来实现相反的情形：使用单词`not`将会对它后面的值取反。
+
+@(**试一试**)[对测试的结果取反]
+
+``` python
+ >>> not True
+ False
+ >>> not 5
+ False
+ >>> not 0
+ True
+ >>> Not True
+ SyntaxError: invalid syntax (<pyshell#30>, line 1)
+```
+注意最后一行代码中的错误。一定不要将`not`运算符大写，否则将得到一条与此处类似的错误消息。
+
+** 示例说明 **
+`not`运算符用于任何得出`True`或者`False`结果的测试中。然而，第3章中提到，任何非零值都被看做`True`，因此可以在预期之外或者不一定有意义的情形下使用`not`：
+``` python
+ >>> not 5 > 2
+ False
+ >>> not "A" < 3
+ True
+ >>> not "A" < "z"
+ False
+```
+
+#### 4.5 观察多个比较运算的结果
+也可以将多个运算的结果合并，这使得程序可以通过多个运算求真值，做出更加复杂的决策。
+
+一种组合是`and`运算，它的含义是：“如果左边的运算、值或者对象为`True`，接着对右边求值。如果左边不为`True`，就停止运算并且输出结果`False`，不再继续运算。”
+
+``` python
+ >>> True and True
+ True
+ >>> False and True
+ False
+ >>> True and False
+ False
+ >>> False and False
+ False
+```
+另外一种组合运算是`or`运算。使用`or`告诉Python对左边的表达式求值，如果它为`False`，Python将继续对右边的表达式求值。如果它为`True`，Python将停止对更多的表达式求值：
+``` python
+ >>> True or True
+ True
+ >>> True or False
+ True
+ >>> False or True
+ True
+ >>> False or False
+ False
+```
+您也许想基于希望发生的动作将多个这样的运算放在一起。这些情形下，从最最左边的`and`或者`or`开始求值，根据之前的规则继续对后续运算求值——换言之，直到在`and`运算中求出`False`值，或者在`or`运算中求出`True`值。
+
+** 如何做出决策 **
+Python有一种非常简单的做出决策的方法。用于做出决策的保留字是`if`，它后面跟着一个判断条件是否为真的测试，该测试以冒号结束，所以在这里可以看到它被写作`if ... :`。它可用于求值为`True`和`False`的任何情形，表示“如果某条件为真，执行以下操作”：
+``` python
+ >>> if 1 > 2:
+ ...    print("No it is not!")
+ ...
+ >>> if 2 > 1:
+ ...    print("Yes it is!")
+ ...
+ Yes, it is!
+```
+仅当`if`和冒号之间的语句的值为`True`时，缩进的语句才会被Python访问并求值。`if`语句中的缩进表明接下来的代码虽然是程序的一部分，但只有在合适的条件发生时才被执行。对于`if ... :`语句，合适的条件是指当比较运算的结果为`True`时。
+
+您已经看到了`Python`在代码表现中最具有特色的一面，这也是大部分人在使用Python时容易发表评论的一个方面。
+
+在Python程序中看到冒号时，它指出Python进入了程序中与其余部分相对独立的一部分。此时，缩进变得很重要。Python通过缩进知道一个特定的代码块与周围的代码保持独立。所用的空格数很重要，面向Python的代码编辑器总是帮助保持正在编写的代码具有正确的缩进。空格数很重要，因此应该使用编辑器确定缩进，并且不要手动改变空格数。
+
+后面将看到更多的与冒号成对出现的关键字；在这些情形下，需要注意缩进。当程序改变了缩进，导致Python无法理解时，它会显示一个错误。
+
+也可以将一个`if ... :`语句放在另外一个`if ... :`语句中，以做出比使用`and`和`or`更加复杂的决策，因为使用`if ... :`可以在对缩进的`if ... :`语句求值之前执行任意一组需要的语句。
+
+@(试一试)[在测试中嵌套测试]
+
+尝试如下示例，其中一个`if ... :`语句出现在另一个当中：
+``` python
+ >>> omelet_ingredinents = {"egg":2, "mushroom":4, "pepper":1, "cheese":1, "milk":1}
+ >>> fridge_contents = {"egg":10, "mushroom":20, "pepper":3, "cheese":2, "tomato":4, "milk":15}
+ >>> have_ingredients =[False]
+ >>> if fridge_contents["egg"] > omelet_ingredinents["egg"]:
+ ...    have_ingredients[0] = True
+ ... have_ingredients.append("egg")
+ ...
+ >>> print(have_ingredients)
+ [True, 'egg']
+ >>> if fridge_coutents["mushroom"] > omelet_ingredients["mushroom"]:
+ ...    if have_ingredients[0] == False:
+ ...        have_ingredients[0] = True
+ ...    have_ingredients.append("mushroom")
+ ...
+ >>> print(have_ingredients)
+ [True, 'egg', 'mushroom']
+```
+
+** 示例说明 **
+
+当一个条件经`if ... :`测试之后，如果还有下一级缩进，Python将继续对在该缩进中放置的代码求值。如果第一个`if ... :`不为真，它下面的任何代码都不会被求值，而将被完全跳过。
+
+然而，如果第一个`if ... :`语句为真，同级的第二个条件将被计算。比较的结果仅决定它下面缩进的代码是否即将被执行。同级别的以及上层代码不会停止，除非有一些特殊的事件发生，例如，一个错误或者一个阻止程序继续运行的条件。
+
+如从`print()`函数看见的那样，当Python检查发现冰箱里的鸡蛋和蘑菇多于煎蛋卷配方所需的鸡蛋和蘑菇时，就会将这两项添加到`have_ingredients`变量中。
+
+为了完成示例，可以输入如下代码（如果希望用计算机表示一个煎蛋卷的话）：
+``` python
+ >>> if fridge_contents["pepper"] > omelet_ingredients["pepper"]:
+ ...    if have_ingredients[0] == True:
+ ...        have_ingredients[0] = False
+ ...    have_ingredients.append("pepper")
+ ...
+ >>> if fridge_contents["cheese"] > omelet_ingredients["cheese"]:
+ ...    if have_ingredients[0] == False:
+ ...        have_ingredients[0] = True
+ ...    have_ingredients.append("cheese")
+ ...
+ >>> if fridge_contents["milk"] > omelet_ingredients["milk"]:
+ ...    if have_ingredients[0] == True:
+ ...        have_ingredients[0] = False
+ ...    have_ingredients.append("milk")
+ ...
+ >>> if have_ingredients[0] == True:
+ ...    print("I have the ingredients to make an omelet!")
+ ...
+ I have the ingredients to make an omelet!
+```
+可以以`if ... :`开头，使用`elif ... :`创建一个测试链。`elif ... :`仅当前面的条件不满足时，才允许测试多个条件。如果使用一系列的`if ... :`语句，它们将被执行。如果在`if ... :`后面使用一个`elif ... :`语句，那么`elif ... :`仅在`if ... :`语句返回`False`时被求值。
+``` python
+ >>> milk_price = 1.50
+ >>> if milk_price < 1.25:
+ ...    print("Buy two cartons of milk, they're on sale")
+ ... elif milk_price < 2.00:
+ ...    print("Buy one carton of milk, prices are normal")
+ ... elif milk_price > 2.00:
+ ...    print("Go somewhere else! Milk costs too much here")
+ ...
+ Buy one carton of milk, prices are normal
+```
+还可以插入一个贯穿`（fall-throught）`语句来处理之前的所有测试都滑的返回`True`的情形：
+`else:`语句。如果`if ... :`和`elif ... :`语句都没有值为`True`的测试条件，`else:`语句将被调用：
+``` python
+ >>> OJ_price = 2.50
+ >>> if OJ_price < 1.25:
+ ...    print("Get one, I'm thirsty.")
+ ... elif OJ_price <= 2.00:
+ ...    print("Ummm... sure, but I'll drink it slowly.")
+ ... else:
+ ...    print("I don't have enough money. Never mind.")
+ ...
+ I don't have enough money. Never mind.
+```
+
+#### 4.6 循环
+您已经看到有很多次都需要检查和比较序列或字典中的每个元素。手动完成这项工作异常乏味，而且难免出错，即使是一个打字飞快的打字员也不例外。而且，如果手动输入这些代码，将不可避免地发生输入错误，并且当正在计算的某些变量或者值在其他地方被更改时，手动输入的代码很难相应地做出改变。
+
+为了执行重复的任务，Python提供了两种循环运算。两者很相似，实际上，它们几乎是等同的，但是每一种运算都从不同的角度考虑问题，因此应该同时掌握这两种运算。
+
+##### 4.6.1 重复执行操作
+可以启动和控制重复任务的两种运算是`while`和`for`。`while`运算测试一个条件的真值，因此表示为`while ... :`。`for`运算使用一个列表中的所有值，因此表示为`for ... in ... :`。
+
+`while ... `运算首先检查它要测试的条件（位于`while`与`:`之前的`...`），如果条件为`True`，它将首次对其缩进的语句求值。当它到达缩进的代码块（该代码块也可以包含其他的缩进代码块）的末尾时，将再一次对测试条件求值，看其是否仍旧为`True`。如果是，再一次重复动作；然而，如果为`False`，Python将离开缩进的部分，并继续计算程序中`while ... :`之后的部分。如果在测试条件中用到了名称，在第一次循环和下一次循环之间（再下一次，等等），这个名称引用的值可能会发生变化，直到某些可以让程序停止的因素出现。
+
+@(试一试)[使用while循环]
+
+``` python
+ >>> i = 10
+ >>> while i > 0:
+ print("Lift off in:")
+ print(i)
+ i = i - 1
+
+ Lift off in:
+ 10
+ Lift off in:
+ 9
+ Lift off in:
+ 8
+ Lift off in:
+ 7
+ Lift off in:
+ 6
+ Lift off in:
+ 5
+ Lift off in:
+ 4
+ Lift off in:
+ 3
+ Lift off in:
+ 2
+ Lift off in:
+ 1
+```
+** 示例说明 **
+之前的代码创建了一个名为`i`的变量，并且给它赋值`10`（注意，该变量可以使用任何合法的名称）。接下来，创建了`while`循环，表明“当`i`的值大于`0`时，执行如下操作”。之后让Python打印语句`Lift off in:`，并输出`i`的当前值。最后，每次循环都将`i`减`1`，导致该序列一次又一次地执行，直到`i`的值等于`0`。
+
+如之前所求，用`for ... in ... :`形式的循环可以实现相同的结果，它和`while ... :`非常相似，但省略了一些步骤。在第一部分`for ...`中，同样赋予一个变量名称（再一次使用`i`，这种做法很常见，因为`i`是`index`的缩写）。在第二部分`in ... :`中，提供了一个序列，例如一个列表、元组或者这里所用的`range`，可以取出`range`中的每个元素并将它的值赋给第一部分给定的变量名称：
+``` python
+ >>> for i in range(10, 0, -1):
+ print("T-minus: ")
+ print(i)
+ ...
+ T-minus:
+ 10
+ T-minus:
+ 9
+ T-minus:
+ 8
+ T-minus:
+ 7
+ T-minus:
+ 6
+ T-minus:
+ 5
+ T-minus:
+ 4
+ T-minus:
+ 3
+ T-minus:
+ 2
+ T-minus:
+ 1
+```
+可以看到，这个循环与`while`循环的工作方式类似，得到了几乎相同的结果（如果没有改变打印的文本的话，它将返回与`while`完全一致的结果）。这个版本的`for`循环稍微有点复杂。如下代码所示为一个简单的版本：
+``` python
+ >>> for i in range(10):
+ print(i)
+ ...
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+```
+这里简单地告诉`for`循环不停地迭代以重复整个过程，直到`i`等于`10`。因为使用了`range`，它自动给变量加`1`，导致程序运行一次之后又循环了`9`次。
+
+##### 4.6.2 终止循环
+
+术语“无穷循环”指的是一段永远重复的代码。一个简单的例子是设置`while ... :`语句，让它测试一个永远为`True`的条件。例如，仅使用`True`就可以实现这种效果。观察如下代码即可，不要直接输入它们：
+``` python
+ >>> while True:
+ ...    print("You're going to get bored with this quickly")
+ ...
+ You're going to get bored with this quickly
+ You're going to get bored with this quickly
+ You're going to get bored with this quickly
+ You're going to get bored with this quickly
+ You're going to get bored with this quickly
+```
+上面的代码会一直继续下去，走到中断它。初看起来让某个操作一直重复不太方便，但有时可能希望如此，例如，在程序中使用一段循环代码等待用户输入，当用户输入完毕后，返回等待。
+
+然而，有时希望知道某些特定的条件是否满足，例如，一天的某个恰当的时间是否到来，水是否用完，是否没有足够的鸡蛋做煎蛋卷等等，这时循环可以被打断，即使在`while ... :`顶部没有显式的测试，或者`for ... in ... :`中正在使用的列表没终点。
+
+可以使用`break`语句退出无穷循环。尝试下面的代码，并确保缩进与这里显示的缩进匹配：
+``` python
+ >>> age = 0
+ >>> while True:
+ how_old=input("Enter your age: ")
+ if how_old=="No":
+     print("Don't be ashamed of your age!")
+     break
+ num=int(how_old)
+ age=age+num
+ print("Your age is :")
+ print(age)
+ print("That is old!")
+ ...
+ Enter your age: 1
+ Your age is :
+ 1
+ That is old!
+ Enter your age: 2
+ Your age is :
+ 3
+ That is old!
+ Enter your age: -3
+ Your age is :
+ 0
+ That is old!
+ Enter your age: 50
+ Your age is :
+ 50
+ That is old!
+ Enter your age: No
+ Don't be ashamed of your age!
+ >>>
+```
+在上面的程序中，`while`总是等于`True`，因此，如果不加处理的话，`while True`语句将一直循环下去。为了解决这个问题，给用户提示了一些信息，这里提示的是年龄。只要他们输入一个数，程序就会将输入的数加到他们的年龄中，显示一个总的年龄，使得看起业他们都变老了（除非他们很机智，输入一个负数，这种情况下他们才会变年轻！）。如果他们仅仅输入数值，程序将一直运行下去。然而，如果他们输入一个字符串`No`，程序将打印“Don't be ashamed of your age!”，然后退出循环。
+
+注意`print`语句和`break`语句的位置。如果将`print`放在`break`之后而不是之前，那么程序每次循环时它都执行，而不是仅在退出循环的时候执行。因此要注意语句放置的位置！
+
+如果使用`break`，它仅从最近的一个循环中退出。如果有一个`while ... :`循环，它包含一个缩进的`for ... in ... :`循环，`for ... in ... :`中的`break`将不会退出`while ... :`循环。
+
+`while ... :`和`for ... in ... :`循环在末端都可以有一个`else:`语句，但它仅在循环不是由`break`语句退出时才会被运行。这种情形下，`else:`叫做`done`或者`on_completion`之类的名称可能更合适一些，但是`else:`是一个较方便的名称，因为前面已经见到过它，并且它也不难记住。
+
+@(试一试)[循环时使用else]
+
+``` python
+ >>> for food in ("pate", "cheese", "crackers", "yogurt"):
+ ...    if food == "yogurt":
+ ...        break
+ ... else:
+ ...     print("There is no yogurt!")
+ ...
+ >>> for food in ("pate", "cheese", "crackers"):
+ ...    if food == "yogurt":
+ ...        break
+ ... else:
+ ...     print("There is no yogurt!")
+ ...
+ There is no yogurt!
+```
+
+** 示例说明 **
+每个示例中，都有一个测试判断是否还有酸奶。如果有，`while ... :`会用一个`break`终止。然而，在第二个循环中，列表中没有酸奶，因此当循环到达列表尾部时将终止，`else:`条件会被调用。
+
+循环还有另外一个常用的特征：`continue`语句。使用`continue`可以告诉Python并不希望循环终止，而是希望跳过当前循环的剩余部分，如果当前是在`for ... in ... :`循环中，条件和列表要被重新求值以进行下一轮循环。
+
+@(试一试)[用continue继续循环]
+
+``` python
+ >>> for food in ("pate", "cheese", "rotten apples", "crackers", "whip cream", "tomato soup"):
+ ...    if food[0:6] == "rotten":
+ ...        continue
+ ...    print("Hey you can %s" % food)
+ ...
+ Hey, you can eat pate
+ Hey, you can eat cheese
+ Hey, you can eat crackers
+ Hey, you can eat whip cream
+ Hey, you can eat tomato soup
+```
+
+** 示例说明 **
+因为使用了一个`if ... :`测试来判断`food`列表中每一项的第一部分是否包含字符串“rotten”，所以“rotten apples”元素会被`continue`跳过，而共余的内容将被打印出来，表示可以安全食用。
+
+#### 4.7 处理错误
+
+第2章和第3章中已经介绍了Python如何报告错误。错误通常包含大量与发生的错误和失败的原因有关的信息：
+``` python
+ >>> fridge_contents = {"egg":8, "mushroom":20, "pepper":3, "cheese":2, "tomato":4, "milk":12}
+ >>> if fridge_contents["orange juice"] > 3:
+ ...    print("Sure, let's have some juice!")
+ ...
+ Traceback (most recent call last):
+   File "<pyshell#3>", line 1, in <module>
+     if fridge_contents["orange juice"] > 3:
+ KeyError: 'orange juice'
+```
+噢！目前冰箱中没有橘子法，但如果不用终止程序就能知道这一信息会好一些。
+
+前面已经介绍了一种找出字典中出现的所有键的方法，可以使用字典的`keys`方法，然后在返回的键列表中搜索，以判断某个希望的键是否出现。然而，没有理由不采用捷径。上述代码中的最后一行显示的错误是：
+``` python
+ KeyError: 'orange juice'
+```
+
+这说明Python遇到错误与字典`fridge_contents`中的键相关。可以利用Python指出的错误让程序防范这一类错误。可以用特殊词`try:`告诉Python要做好出错的准备。
+
+** 使用try：语句 **
+
+`tyr:`语句设立了这样一种情形，其中`try:`语句后面可以跟一个`except:`语句。每个`expect:`语句都处理错误，错误也被正式地称作异常，当Python对`try:`语句中的代码求值时会抛出异常，而不是使用程序失败。首先使用`except:`处理一种类型的错误，例如在试图检查冰箱时得到 的`KeyError`错误。
+
+有多种类型的异常，每个异常的名称都反映了发生的问题，并且也有可能同异常所发生的条件。因为字典有键与值，`KeyError`表示正在向字典请求的的键不存在。类似地，一个`TypeError`表明Python期待某种类型的数据（例如，一个字符串或者一个整型值），但是提供给它的却是另外一种不能满足要求的类型。
+
+另外，当异常发生时，可以访问原本在交互运行程序的时候程序停止时会看到的消息。
+
+学到更多知识后，在需要的条件下，您将能够定义自己的异常类型。
+
+只有一行代码用于处理错误，这看起来很受限制，但第5章将介绍如何编写自己的函数，这样可以更加灵活地处理错误。
+``` python
+ >>> fridge_contents = {"egg":8, "mushroom":20, "pepper":3, "cheese":2, "tomato":4, "milk":13}
+ >>> try:
+ ...    if fridge_contents["orange juice"] > 3:
+ ...        print("Sure, let's have some juice!")
+ ... except KeyError:
+ ...    print("Awww, there is no juice. Let's go shopping!")
+ ...
+ Aww, there's no juice. Lets go shopping
+```
+您也许发现需要打印关于错误本身更多的信息，这些信息是可以访问的。
+
+@(试一试)[创建异常以及对异常的说明]
+
+``` python
+ >>> fridge_contents = {"egg":8, "mushroom":20, "pepper":3, "cheese":2, "tomato":4, "milk":13}
+ >>> try:
+ ...    if fridge_contents["orange juice"] > 3:
+ ...        print("Sure, let's have some juice")
+ ... except (KeyError) as error:
+ ...     print("Woah! there is no %s" % error)
+ ...
+ Woah! There is no 'orange juice'
+```
+
+** 示例说明 **
+
+因为在字典`fridge_contents`中没有键“orange juice”，Python抛出了一个`KeyError`异常，说明没有这样的键。除此之外，还指定了名称`error`，Python将用它引用一个字符串，该字符串包含了Python可以提供的错误信息。我们通过`as`关键字将`KeyError`的值赋给`error`。在这种情形下，字符串与已请求但未在字典`fridge_contents`中出现的键有关（这里是“orange juice”）。
+
+有时也许会用相同的方式处理多种错误，在这种情况下，可以用一个元组包含有关的所有异常类型：
+
+``` python
+ >>> fridge_contents = {"egg":8, "mushroom":20, "pepper":3, "cheese":2, "tomato":4, "milk":13}
+ >>> try:
+ ...    if fridge_contents["orange juice"] > 3:
+ ...        print("Sure, let's have some juice")
+ ... except (KeyError, TypeError) as error:
+ ...    print("Woah! There is no %s" % error)
+ ...
+ Woah! There is no 'orange juice'
+```
+如果需要处理一个异常，但是希望以什么都不做的方式处理它（原因可能是故障不严重），Python允许通过特殊词`pass`忽略这种情形：
+``` python
+ >>> fridge_contents = {"egg":8, "mushroom":20, "pepper":3, "cheese":2, "tomato":4, "milk":13}
+ >>> try:
+ ...    if fridge_contents["orange juice"] > 3:
+ ...        print("Sure, let's have some juice")
+ ... except (KeyError) as error:
+ ...     print("Woah! There is no %s" % error)
+ ... except (TypeError):
+ ...     pass
+ ...
+ Woah! There is no 'orange juice'
+```
+还有一个`else:`语句可以放在`try:`代码块的末端。在没有捕获到任意异常时，它将被执行。如前所述，`else`这个名称的描述性可能不如“in case it all works”或“all_clear”这样的名称，但是到现在已经可以看到，`else:`可以处理各种情况的一种灵活的机制，表示“如果某事发生，则如何处理”。在需要时，随时可以使用它。
+
+#### 4.8 本章小结
+
+本章介绍了Python提供的做出决策的方法。任意得出`True`或者`False`结果的运算，都可以用`if ... :`语句中来判断一个程序是否要对一段缩进的代码求值。
+
+缩进在Python中扮演着重要的角色。即使在交互的Python Shell中，缩进中的空格数也很重要。
+
+本章讨论了在循环中使用序列和字典中元素的知识。通过使用循环，可以对一个列表的每个元素执行运算并且根据每个列表元素做出决策。
+
+Python提供了两种 类型的循环，分别是`while ... :`循环和`for ... in ... :`循环。它们持续执行相似的工作，走到某个条件导致它们结束。两者的区别在于允许它们对缩进的代码块求值的条件不同。`while ... :`循环在它的测试中只测试是`True`还是`False`，而`for ... in ... :`循环将接受在`in ... :`部分提供的序列，序列中的第一个到最后一个元素将被赋给`for ...`部分中提供的值。
+
+这两种类型的重复循环在它们的测试条件满足之前，可以通过`break`语句退出。Break语句导致正在执行的循环停止，不再对循环的代码块中其余的代码求值。然而，如果执行一个`break`语句，循环中可选的`else:`条件将不被执行。除了`break`之外，还有一个`continue`语句，它将跳过当前循环的剩余部分，然后返回到循环的顶部并对下一个测试条件求值。
+
+本章还介绍了其他类型的做出决策的方法，即处理Python用来报错的异常。如果没有处理异常，错误会导致程序在出错的地方停下来。然而，如果将可能会导致错误的代码缩进并放到`try:`的下面，就可以阻止程序退出，甚至可以处理错误并且使程序继续运行。在`except ... :`语句中指定预计会碰到的错误，其中，提供的第一个值定义了错误的类型（如果提供的是错误类型的元组，就是多个错误类型）；也可以选择在该值的后面提供词`as`，以及用来引用包含错误信息的数据的名称。
+
+** 本章要点： **
+
+* 可以用两个等号（==）测试相等性。如果答案是`True`，则返回`True`。如果是`False`，则返回`False`。双等号也可以用来判断两个变量是否保存相同的数据。
 
 
 
@@ -1454,7 +2054,11 @@ Python包含几个特殊类型。前面已经介绍过它们，但在此仍有�
 
 
 
-全文第【69】页
+
+
+
+
+全文第【84】页
 
 
 上传图片的免费实用图床网站：
