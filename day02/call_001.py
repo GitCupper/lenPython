@@ -1,3 +1,3 @@
-import day02.zztools
+from day02.zztools import say_hello
 
-day02.zztools.say_hello()
+say_hello()
