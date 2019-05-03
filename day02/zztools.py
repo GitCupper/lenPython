@@ -44,3 +44,6 @@ def print_lines(c, n, m):
     while i < m:
         print_line(c, n)
         i += 1
+
+size = 100
+title = "软件工程师"

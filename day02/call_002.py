@@ -16,3 +16,5 @@ print("p1:", p1, "|", "p2:", p2)
 day02.zztools.print_line("#", 50)
 
 day02.zztools.print_lines("$", 60, 4)
+
+print("Title is: ", day02.zztools.title, ", his size is: ", day02.zztools.size)
