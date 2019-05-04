@@ -2084,7 +2084,7 @@ chapter_4.py
 chapter_5.py
 ```
 将第一个程序保存到文件后，代码编辑器开始以不同的颜色和样式显示程序中的某些部分以强调它们。内置的函数和保留字以一种方式处理，字符串以另外的方式处理，而一些关键字又会采用另外一种处理方式。然而，文件中的大部分文本都还是普通的黑色和白色，如图5－1所示。
-![图5－1]()
+![图5-1](https://i.loli.net/2019/05/04/5ccd6a69f37a3.png)
 使用这些文件后，只输入一次示例即可。当输入一个例子并且保存它之后，可以用`python -i <filename>`运行它。`-i`告诉Python读取程序文件，然后允许您继续与Python交互，而不是立刻退出（这是Python通常的做法）。在代码编辑器中，可以通过从`File`菜单选择`Run with Interpreter`自动完成这种设置。
 
 @(试一试)[利用`-i`在Python中运行程序]
@@ -2117,7 +2117,7 @@ chapter_5.py
 尝试将下面的代码保存到第5章的文件`ch5.py`中。
 ``` python
  def in_fridge():
- 
+
      try:
          count = fridge[wanted_food]
      except KeyError:
@@ -2153,12 +2153,57 @@ chapter_5.py
 
 
 ##### 5.2.1 选择名称
+把函数写好的第一个指导原则是函数的名称能够反映其用途。这些名称应当指出函数的功能，如Python中的函数`print`、`type`和`len`。
 
-「today worked Page-89」
+当确定一个名称时，应当考虑如何在程序中调用它。如果命名一个函数，日后您以及其他人调用它时，都能很自然地理解它，这将非常好。几周之内忘记函数的具体细节是很正常的，因此日后返回来用它时，函数的名称就成为回忆它的功能的主要手段。
+
 ##### 5.2.2 在函数中描述函数
+在待定函数名称之后，应当再给函数添加一个描述。Python可以用简单并有意义的方式完成这件事情。
+
+如果将一个字符串作为函数的第一部分内容，而没用名称引用它，Python将它存储在函数中，以便以后可以引用它。这个字符串通常叫做`docstring`，是`documentation string`（文档字符串）的缩写。
+
+函数的文档字符串用于描述函数。很少有计算机软件做了良好的说明。然而，通常情况下，由于Python提供了简单的文档字符串特性，相对于用缺乏友好和有帮助的约定的其他语言编写的程序，Python程序中有更多可用的信息。
+
+文档字符串中文本并不必像其他代码那样遵循缩进规则，因为它仅仅是一个字符串。输入完文档字符串后，即使它可能看起来破坏了缩进，函数的后续部分也仍然必须保持正确的缩进，记住这一点非常重要。
+``` python
+ def in_fridge ():
+   """This is a function to see if the fridge has a food.
+   fridge has to be a dictionary defined outside of the function.
+   the food to be searched for is in the string wanted_food"""
+   try:
+     count = fridge[wanted_food]
+   except KeyError:
+     count = 0
+   return count
+```
+文档字符串通过函数中的名称引用，仿佛函数是字典一样。这个名称是`__doc__`，它的用法是在函数名称之后加一个英文句点，再加上`__doc__`。注意，在`doc`前后各有两个下划线（_）。
+
+@(试一试)[显示`__doc__`]
+
+现在应当退出上个示例进入的交互式会话，然后重新调用`ch5.py`，因为现在`in_fridge`中加入了文档字符串。此后，可以执行如下操作：
+``` python
+ >>> print("%s" % in_fridge.__doc__)
+ This is a function to see if the fridge has a food.
+ fridge has to be a dictionary defined outside of the function.
+ the food to be searched for is in the string wanted_food
+```
+
+** 示例说明 **
+如其他类型一样，函数也有一些属性，可以通过在函数名称后加句点，再加属性名称来使用。`__doc__`是一个字符串，像其他字符串一样，在一个交互式会话中很容易把它打印出来以便引用。
+
+函数还有其他信息（它保存的这组信息可以使用内置函数`dir`查看）。
+
+`dir`显示您感举的对象（例如函数）的所有属性，包括Python内部使用的属性：
+``` python
+ >>> dir()
+ ['__annotations__', '__builtins__', '__doc__', '__loader__', '__name__', '__package__', '__spec__']
+```
+可以使用获得`in_fridge.__doc__`引用的数据同样的表示方法访问这些属性，但是通常并不南要直接使用其中的大部分属性，尽管使用`type`内置函数研究Python如何描述这些元素是很好的练习。
 
 ##### 5.2.3 不同的位置相同的名称
+函数的一个特殊属性在于它是您见到的对引用数据的名称进行划分的第一个示例。
 
+「today worked Page-91」
 ##### 5.2.4 添加注释
 
 ##### 5.2.5 要求函数使用提供的值
