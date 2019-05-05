@@ -2201,11 +2201,48 @@ chapter_5.py
 可以使用获得`in_fridge.__doc__`引用的数据同样的表示方法访问这些属性，但是通常并不南要直接使用其中的大部分属性，尽管使用`type`内置函数研究Python如何描述这些元素是很好的练习。
 
 ##### 5.2.3 不同的位置相同的名称
-函数的一个特殊属性在于它是您见到的对引用数据的名称进行划分的第一个示例。
+函数的一个特殊属性在于它是您见到的对引用数据的名称进行划分的第一个示例。这意味着如果函数之外有一个名称，该名称引用一个特定值，这个值可以是字符串、数值、字典、序列或者函数。这些数据享有共同的空间。
 
-「today worked Page-91」
+例如，如果创建了一个字符串名称，然后在下一行创建了一个字典，并用相同的名称引用这个字典，那么这个名称将不再引用字符串，而是仅引用字典：
+``` python
+ >>> fridge = "Chilly Ice Makers"
+ >>> print(fridge)
+ Chilly Ice Makers
+ >>> fridge = {'apples':10, 'oranges':3, 'milk':2}
+ >>> print("%s" % fridge)
+ {'apples':10, 'oranges':3, 'milk':2}
+```
+这很合理，但是在函数中使用名称时会有所不同。函数创建了一个新的空间，其中名称可以被重新使用和创建，而不会影响到程序的其他作用域中的相同名称。所以在编写函数时，完全不用担心其他地方或者其他函数中已经用过同样的名称。
+
+因此，编写函数时，函数有自己的一些名称，其他的函数也有自己的名称，它们是分开的。即使两个函数中某个名称完全相同，由于它们在不同的函数中，所以是完全独立实体，引用的是不同的值。
+
+如果即将在一个已知的情形中使用一个函数，并可以确保它要用的名称已被定义，而且引用了正确的数据，函数就可以通过已经定义的名称访问这个全局数据。Python的这种能力来源于它将一个名称的可见性分隔到不同的概念区域内。每一个这样的区域叫做一个作用域。
+
+最上面一层作用域中的任何名称在一个低层次作用域中可再次被使用，而不影响上层名称引用的数据：
+``` python
+ >>> special_sauce = ['ketchup', 'mayonnaise', 'french dressing']
+ >>> def make_new_sauce():
+ ... """This function makes a new special sauce all its own"""
+ ...    special_sauce = ["mustard", "yogurt"]
+ ...    return special_sauce
+ ...
+```
+此处，最上层作用域中有一个`special_sauce`，函数`make_new_sauce`中也有一个`special_sauce`。当运行时，可以看到全局作用域中的名称没有改变：
+``` python
+ >>> print("%s" % special_sauce)
+ ['ketchup', 'mayonnaise', 'french dressing']
+ >>> new_sauce = make_new_sauce()
+ >>> print(sepcial_sauce)
+ ['ketchup', 'mayonnaise', 'french dressing']
+ >>> print(new_sauce)
+ ['mustard', 'yogurt']
+```
+记住，不同的函数完全可以定义相同名称的变量，该名称在两个函数中都有意义，但却引用不同的值，彼此不会产生冲突。
+
 ##### 5.2.4 添加注释
+Python有一个额外的特性可以帮助记录自己的程序。输入到程序中的全部内容，即使目前为止它还未改变程序的行为（如文档字符串），Python也会处理它。即使不被使用的字符串，Python也会创建它，以便将来使用。
 
+「LatestType Page-92」
 ##### 5.2.5 要求函数使用提供的值
 
 ##### 5.2.6 检查参数
