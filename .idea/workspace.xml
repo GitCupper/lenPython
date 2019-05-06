@@ -25,7 +25,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/day04/oop-007.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="426">
+            <state relative-caret-position="641">
               <caret line="41" selection-start-line="41" selection-end-line="41" />
             </state>
           </provider>
@@ -296,7 +296,7 @@
       <workItem from="1556966312668" duration="1594000" />
       <workItem from="1556973690556" duration="1022000" />
       <workItem from="1557019378248" duration="13000" />
-      <workItem from="1557020232878" duration="13679000" />
+      <workItem from="1557020232878" duration="14246000" />
     </task>
     <task id="LOCAL-00001" summary="在001-hello.py中增加了一个变量。">
       <created>1555846149694</created>
@@ -337,7 +337,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="57387000" />
+    <option name="totallyTimeSpent" value="57954000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -350,13 +350,12 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="2023" y="51" width="1670" height="956" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17694205" />
       <window_info id="Favorites" order="1" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3292978" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3292978" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3292978" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39896372" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -722,7 +721,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/day04/oop-007.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="426">
+        <state relative-caret-position="641">
           <caret line="41" selection-start-line="41" selection-end-line="41" />
         </state>
       </provider>
