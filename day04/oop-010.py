@@ -10,7 +10,7 @@ class Computer(object):
     @classmethod
     def calc(cls):
         print("使用%d个核心进行计算" % cls.cores)
-    Computer.cores += 1
+        Computer.cores += 1
 
     @staticmethod
     def show():
