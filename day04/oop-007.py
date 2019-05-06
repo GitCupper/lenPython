@@ -1,4 +1,4 @@
-class Animal:
+class Animal(object):
     def eat(self):
         print("吃")
 
@@ -18,8 +18,14 @@ class Dog(Animal):
         print("汪汪")
 
 
+# 一个宠物类
+class Pet():
+    def rock(self):
+        print("摇滚！")
+
+
 # 继承的传递
-class Hasky(Dog):
+class Hasky(Dog, Pet):
     def jump(self):
         print("跳一跳")
 
@@ -32,6 +38,9 @@ class Hasky(Dog):
     # 创建一个对象：
 
 
+# 多继承
+
+
 wc = Dog()
 wc.run()
 wc.bark()
@@ -39,4 +48,4 @@ wc.bark()
 hs = Hasky()
 hs.eat()
 hs.run()
-
+hs.rock()

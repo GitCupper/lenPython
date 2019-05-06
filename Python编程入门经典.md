@@ -2242,6 +2242,28 @@ chapter_5.py
 ##### 5.2.4 添加注释
 Python有一个额外的特性可以帮助记录自己的程序。输入到程序中的全部内容，即使目前为止它还未改变程序的行为（如文档字符串），Python也会处理它。即使不被使用的字符串，Python也会创建它，以便将来使用。
 
+除了不需要的字符串，每门程序语言都有在代码中添加注释的功能，注释不会对程序有影响。它们是供代码使用者阅读的，而不是为Python准备的。
+
+任何地方，一行里有`#`字符且它不出现在字符串中，Python将忽略它后面的所有内容，而开始对下面一行语句求值，并从此处开始读取剩余部分的程序。
+
+@(试一试)[添加注释]
+
+如果交互式地测试注释，可以看到Python读它们时与读字符串不同：
+``` python
+ >>> "This is a string"
+ 'This si a string'
+ >>> # This is a comment
+ >>>
+ >>> "This is a string" # with a comment at the end
+ 'This is a string'
+    >>> print("# Here is a pound sign within a string, being treated as a string!")
+ # Here is a pound sign within a string, being treated as string!
+```
+
+** 示例说明 **
+当注释单独出现时，Python忽略它并且返回，询问一下个请求，试着提示输入一个它可以计算的语句。当注释与可以计算的代码出现在同一行时，即使仅仅是个字符串，Python也知道您已经给了它指令。
+
+
 「LatestType Page-92」
 ##### 5.2.5 要求函数使用提供的值
 
