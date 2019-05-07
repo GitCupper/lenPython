@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="26e025c4-2853-46cf-937f-794d9e7b0a41" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/day01/031-try01.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/day04/oop-010.py" beforeDir="false" afterPath="$PROJECT_DIR$/day04/oop-010.py" afterDir="false" />
-    </list>
+    <list default="true" id="26e025c4-2853-46cf-937f-794d9e7b0a41" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -317,7 +313,7 @@
       <workItem from="1557019378248" duration="13000" />
       <workItem from="1557020232878" duration="13679000" />
       <workItem from="1557061716083" duration="3167000" />
-      <workItem from="1557109457579" duration="5679000" />
+      <workItem from="1557109457579" duration="5752000" />
     </task>
     <task id="LOCAL-00001" summary="在001-hello.py中增加了一个变量。">
       <created>1555846149694</created>
@@ -361,11 +357,18 @@
       <option name="project" value="LOCAL" />
       <updated>1557126357249</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="20190504-02">
+      <created>1557129650118</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1557129650118</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="66233000" />
+    <option name="totallyTimeSpent" value="66306000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -378,13 +381,12 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1920" y="23" width="1920" height="1057" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15651709" />
       <window_info id="Favorites" order="1" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3292978" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49946582" visible="true" weight="0.3279396" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49946582" weight="0.3279396" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39896372" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -392,7 +394,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.28601035" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
-      <window_info active="true" anchor="bottom" id="Event Log" order="10" sideWeight="0.5005342" side_tool="true" visible="true" weight="0.3279396" />
+      <window_info active="true" anchor="bottom" id="Event Log" order="10" sideWeight="0.5005342" side_tool="true" visible="true" weight="0.32901832" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.32953367" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.32983193" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
