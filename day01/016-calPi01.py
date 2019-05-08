@@ -2,7 +2,7 @@ import random
 import math
 import time
 
-darts = 2 ** 40
+darts = 2 ** 35
 hist = 0
 # time.clock()
 time.process_time()
