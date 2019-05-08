@@ -2499,9 +2499,109 @@ Python用词`unsubscriptable`指出它不能像在字典中那样找到与一个
 所有函数已经就绪，可以被逐个调用，所以只需指定希望制作的煎蛋卷的名称，然后就可以使用`make_omelet`了。
 
 ##### 5.2.9 函数嵌套函数
+在工作中不可能对煎蛋卷制作进行模拟，但对现实世界的情形进行部分模拟是有可能的，本小节将介绍如何改进已有的解决方案。
 
-「LatestType Page-98」
+也许一个特定函数的工作太多，不便在一个地方定义，您希望将它分解成小的不同的片段。为此，可以将函数放在另外的函数内部，并且从那个函数中调用该函数。这样复杂函数变得更有意义。例如，`get_omelet_ingredients`可以完全包含在`make_omelet`函数内部，并且不能用于程序的其余部分。
+
+限制该函数的可见性是有意义的，因为该函数只能用于制作煎蛋卷。如果编写一个程序，其中也包含制作其他食物的指令，煎蛋卷的成分将不能用于制作其他类型的食物，即使像炒蛋或者梳芙厘这样与煎蛋卷类似的食物。每种新食物都需要自己的功能相同的函数。然而，`make_food`函数仍然有意义，可用于任意类型的食物。
+
+在另外一个函数中定义一个函数就像在顶层定义它一样。唯一的不同之处是它与包含它的函数中的其他代码在相同的级别缩进。这种情况下，所有代码看起来很类似：
+``` python
+ def make_omelet(omelet_type):
+     """This will make an omelet. You can either pass in a dictionary
+     that contains all of the ingredients for your omelet, or provide
+     a string to select a type of omelet this function already knows
+     about"""
+     def get_omelet_ingredients(omelet_name):
+         """ This contains a dictionary of omelet names that can be produced,
+ and their ingredients"""
+         ingredients = {"eggs":2, "milk":1}
+         if omelet_name == "cheese":
+             ingredients["cheddar"] = 2
+         elif omelet_name == "western":
+             ingredients["jack_cheese"] = 2
+
+     ingredients["ham"]      = 1
+             ingredients["pepper"]  = 1
+             ingredients["onion"]   = 1
+         elif omelet_name == "greek":
+             ingredients["feta_cheese"] = 2
+         else:
+             print("That's not on the menu, sorry!")
+             return None
+         return ingredients
+     if type(omelet_type) == type({}):
+         print("omelet_type is a dictionary with ingredients")
+         return make_food(omelet_type, "omelet")
+     elif type(omelet_type) == type(""):
+         omelet_ingredients = get_omelet_ingredients(omelet_type)
+         return make_food(omelet_ingredients, omelet_type)
+     else:
+         print("I don't think I can make this kind of omelet: %s" % omelet_type)
+```
+使用函数之前定义函数非常重要。如果试图在定义一个函数之前就调用它，那么在调用时Python不知道函数的存在，因此不能调用它！当然，这将导致一个错误并引起一个异常。因此，在文件的开始处定义函数，这样一直到最后都可以使用它们。
+
+
 ##### 5.2.10 用自己的词语标记错误
+如果需要指出发生了一个特定的错误，那么可能希望使用已经见过的一个错误指出正在调用的函数哪里出错了。
+
+与`try:`和`except:`关键字对应的是`raise ...`命令。使用`raise ...`命令的好时机是，在编写了一个接受多个参数的函数，而其中一个参数类型错误时，非常适合使用`raise ...`命令。
+
+可以检查传递进来的参数，并使用`raise ...`指出提供了错误类型的参数。当使用`raise ...`时还提供了一条`except ... :`语句可以捕获并显示的错误信息，即关于该错误的解释。
+
+下面的代码修改了`make_omelet`函数的结尾部分，将一个打印出的错误（适合运行程序的人阅读）替换为一个`raise ...`语句，这样即可以通过函数处理错误，也可以将该错误打印出来。
+``` python
+ if type(omelet_type) == type({}):
+     print("omelet_type is a dictionary with ingredients")
+     return make_food(omelet_type, "omelet")
+ elif type(omelet_type) == type(""):
+     omelet_ingredients = get_omelet_ingredients(omelet_type)
+     return make_food(omelet_ingredients, omelet_type)
+ else:
+     raise TypeError("No such omelet type: %s" % omelet_type)
+```
+完成该修改后，`make_omelet`在遇到问题时，可以显示关于该类错误的精确信息，同时仍旧为使用者提供信息。
+
+#### 5.3 函数的层次
+现在已经了解了函数是什么以及它们是如何工作的，考虑它们的调用方式以及Python如何记录调用层次非常有用。
+
+当程序调用一个函数时，或者一个函数调用一个函数时，Python在其内部创建了一个叫做栈的列表，有时也叫做调用栈。当调用一个函数时，Python将停止片刻，记住程序调用函数时所处的位置，之后将该信息贮藏到它的内部列表。之后进入函数并且执行它。例如下，如下代码阐明了Python如何记录它是如何进入以及离开函数的：
+``` python
+ [{'top_level': 'line 1'}, {'make_omelet': 'line 64'}, {'make food': 'line 120'}]
+在最上层，Python从第一行开始记录。之后，当函数`make_omelet`在第64行被调用时，也对其进行了记录。再后来，`make_food`被`make_omelet`调用。当`make_food`函数结束时，Python确定它在第64行，于是返回到第64行并继续执行。这个示例中的行数是虚构的，但是您可以了解其中的意思。
+这个列表叫做栈，形象地表示出了进入函数的方式。可以想象直到退出时，一个函数位于栈顶部，当去掉它时，栈的长度缩减了1。
+
+** 如何解读深层的错误 **
+
+当程序中有一个错误发生时，如果引起一个未捕获的错误，您将看到一个比之前见过的更加复杂的错误。例如，假设传递了一个包含列表而不是一个数值的字典。这将导致一个如下所求的错误：
+``` python
+ >>> make_omelet({"a":1, "b":2, "j":["c", "d", "e"]})
+ omelet_type is a dictionary with ingredients
+ Adding 1 of a to make a omelet
+ Adding 2 of b to make a omelet
+ Traceback (most recent call last):
+   File "<stdin>", line 1, in ?
+   File "ch5.py", line 96, in make_omelet
+     return make_food(omelet_type, "omelet")
+   File "ch5.py", line 45, in make_food
+     Print("Adding %d of %s to make a %s" % (ingredients_needed[ingredient], ingredient, food_name))
+ TypeError: int argument required
+```
+当从文件进入一个函数后，Python将指出您在栈中的位置（这意味着错误发生时有多少层以及栈中的每层在程序哪一行被调用），因此可以打开有问题的文件来确定发生了什么。
+
+当调用更多的函数或者使用函数调用其他函数，创建了深层的栈（可以将它想象为长一些的列表）时，就获得了使用栈跟踪（这是引发一个错误或者引起一个异常时，Python对输出使用的通用名称）的经验。前面的栈跟踪尝试为3，可以看到在第45行，当调用`make_food`时，参数类型有问题。现在可以回去修复它。
+
+如果认为这个问题会经常发生，可以将`make_food`调用括在一个`try ... :`代码块中，这样`TypeError`错误将不会终止程序。然而，如果能在函数中处理掉这个错误，就更好了。
+
+在使用明显错误的类型或字典成员的情况下，Python将引起一个`TypeError`，我们通常没必要执行额外的操作。然而，希望如何处理特定的情形取决于您。
+
+栈跟踪是栈的可读形式，可以检查它们来确定问题所在。栈跟踪显示了问题发生时的所有情况，只要引发异常，Python就会生成栈跟踪。
+
+#### 5.4 本章小结
+
+「LatestType Page-101」
+#### 5.5 习题
+
 
 ### 第6章 类与对象
 
