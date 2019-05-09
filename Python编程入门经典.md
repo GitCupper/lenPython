@@ -2568,6 +2568,7 @@ Python用词`unsubscriptable`指出它不能像在字典中那样找到与一个
 当程序调用一个函数时，或者一个函数调用一个函数时，Python在其内部创建了一个叫做栈的列表，有时也叫做调用栈。当调用一个函数时，Python将停止片刻，记住程序调用函数时所处的位置，之后将该信息贮藏到它的内部列表。之后进入函数并且执行它。例如下，如下代码阐明了Python如何记录它是如何进入以及离开函数的：
 ``` python
  [{'top_level': 'line 1'}, {'make_omelet': 'line 64'}, {'make food': 'line 120'}]
+```
 在最上层，Python从第一行开始记录。之后，当函数`make_omelet`在第64行被调用时，也对其进行了记录。再后来，`make_food`被`make_omelet`调用。当`make_food`函数结束时，Python确定它在第64行，于是返回到第64行并继续执行。这个示例中的行数是虚构的，但是您可以了解其中的意思。
 这个列表叫做栈，形象地表示出了进入函数的方式。可以想象直到退出时，一个函数位于栈顶部，当去掉它时，栈的长度缩减了1。
 
@@ -2618,7 +2619,7 @@ Python用词`unsubscriptable`指出它不能像在字典中那样找到与一个
 
 * 通过`python -i`（或者`Run with Interpreter`）运行Python程序，可以创建一些较长的程序，而不用直接向Shell中输入代码。
 * 通过将代码片段另存为函数，使它们可在当前或者以后的程序中重复使用，可以节省时间。
-* 文档字符串以三引号（"""）开头，它可以定义函数的用途，为自己和将来的程序员留下注释。
+* 文档字符串以三引号(""")开头，它可以定义函数的用途，为自己和将来的程序员留下注释。
 * 可以在函数中用`__doc__`显示文档字符串。
 * 通过`dir()`可以看到一个对象的所有属性。
 * 可以通过`#`向代码中添加注释。Python忽略同一行中该符号后面的内容。注释允许您留下记录，若干月后需要再次查看代码或其他编程人员需要阅读代码时，可以更快地理解当初编写的代码。
@@ -2629,12 +2630,9 @@ Python用词`unsubscriptable`指出它不能像在字典中那样找到与一个
 2. 增加类型检查，以确认参数的类型要么是整形，要么是字符串。如果参数不正确，招聘一个`TypeError`。
 3. 这个题目的工作量较大，请随意将它分为几部分。第4章中，编写一个循环制作煎蛋卷。它做了从检查成分到把它们从冰箱中取出并做成一个煎蛋卷的全部工作。以该循环为原型，更改`make_omelet`函数，编写一个名为`make_omelet_q3`的函数。它应该从下述方面对`make_omelet`进行修改，使得它更加贴切描述一个真实的厨房：
 > a. 将冰箱作为第一个参数传递给新的`make_omelet`。应当检查冰箱的类型，确保它是一个字典。
-
-> b. 增加一个函数检查冰箱，并且将即将用到的成分从冰箱中减去。将这个函数命名为`remove_from_fridge`。该函数首先检查冰箱中是否有足够多的成分制作煎蛋卷，检查完毕后，再将这些成分从冰箱中取出以制作煎蛋卷。用错误类型`LookupError`作为要招聘的错误的类型。
-
-> c. 将从冰箱中取出的食物放到一个字典中，由函数`remove_from_fridge`函数返回，赋给一个名称，将该名称传递给`make_food`。毕竟，并不希望将不打算使用的食物从冰箱中取出。
-
-> d. 制作一个不同的默认煎蛋卷，而不是奶酪煎蛋卷。向函数`get_omelet_ingeredients`中添加这个煎蛋卷的成分。
+>  b. 增加一个函数检查冰箱，并且将即将用到的成分从冰箱中减去。将这个函数命名为`remove_from_fridge`。该函数首先检查冰箱中是否有足够多的成分制作煎蛋卷，检查完毕后，再将这些成分从冰箱中取出以制作煎蛋卷。用错误类型`LookupError`作为要招聘的错误的类型。
+>   c. 将从冰箱中取出的食物放到一个字典中，由函数`remove_from_fridge`函数返回，赋给一个名称，将该名称传递给`make_food`。毕竟，并不希望将不打算使用的食物从冰箱中取出。
+>    d. 制作一个不同的默认煎蛋卷，而不是奶酪煎蛋卷。向函数`get_omelet_ingeredients`中添加这个煎蛋卷的成分。
 4. 更改`make_omelet`，在订购沙门氏菌煎蛋卷时，使用`get_omelet_ingredients`函数抛出一个`TypeError`错误。尝试订购一个沙门氏菌煎蛋卷，并查看产生的栈跟踪。
 
 ### 第6章 类与对象
@@ -2763,7 +2761,78 @@ Python中的任何一条数据都是对象。每个对象都由3部分组成：�
 
 还需要向这个对象中写入若干代码，使选择的这个模型成为一个`Fridge:`一个是能确定某种食物是否在`Fridge`中存在的函数，另外一个是检查一个包含食物成分的完整字典的函数。现在可以开始准备烹饪了。
 
-「LatestType Page-108」
+为了建模的目的，在使用`Fridge`存储成分并在希望烹饪时从冰箱中取出它们时，这即是需要的全部方法。换言之，这将作为该特定情形的模型运行，并能够应付每种可能的情况。
+
+对象提供给外界使用的方法叫做它的接口，因为这些方法是对象之外的程序使用该对象的途径。对象通过提供接口变得实用。
+
+接口是使对象可用的任何方法和名称。在Python中，这通常意味着没有以一个或多个下划线形状的方法和名称都是接口；当然，在类的文档字符串中明确指出哪些方法可用，以及如何使用它们，以与那些不希望被调用的函数区别，这是一个很好的习惯。
+``` python
+ class Fridge:
+     """This class implements a fridge where ingredients can be
+     added and removed individually, or in groups.
+     The fridge will retain a count of every ingredient added or removed,
+     and will raise an error if a sufficient quantity of an ingredient
+     isn't present.
+     Methods:
+     has(food_name [, quantity]) - checks if the string food_name is in the
+ fridge. Quantity will be set to 1 if you don't specify a number.
+     has_various(foods) - checks if enough of every food in the dictionary is in the fridge
+     add_one(food_name) - adds a single food_name to the fridge
+     add_many(food_dict) - adds a whole dictionary filled with food
+     get_one(food_name) - takes out a whole dictionary worth of food.
+     get_many(food_dict) - takes out a whole dictionary worth of food.
+     get_ingredients(food) - If passed an object that has the __ingredients__
+            method, get_many will invoke this to get the list of ingredients.
+     """
+    def __init__(self, items={}):
+           """Optionally pass in an initial dictionary of items"""
+           if type(items) != type({}):
+               raise TypeError("Fridge requires a dictionary but was given %s" %
+   type(items))
+           self.items = items
+           return
+```
+花几分钟看上面代码中的`__init__`和`self`部分。这是类的两个非常重要的特征。当Python创建对象时，`__init__`方法传递给对象第一个参数。而`self`实际上是代表该实例本身的变量。
+
+另外，当决定编写一个类时，为希望使用的方法做注释是一个好习惯。实际上，它是考虑类的完整性时，类要完成的功能的概述，这使得在编写程序的同时就可以测试程序（更详细的信息可参考第12章）。
+
+当编写接口方法时，将会注意到，大多数情况下，简单的方法共享许多特征，例如“取出一种”、“取出两种”或者“取出多种”等，但是为了使它们调用起来比较简单，希望保留各种形式。这看起来好像要为其中每个函数重复大量源代码。然而，不用重复输入接口方法的共同部分，可以编写仅由每个方法内部使用的私有方法而节省输入。
+
+这些私有方法可以执行部分或者全部接口方法的共同操作。当私有方法很复杂，或者包含用户在使用方法时不需要了解细节时，需要进行这样的操作。这样可以在类被调用时避免困惑，同时使用它更易于编写。最好的情况下，这是个明显的双赢局面。
+
+在`Fridge`类，以及即将编写的许多类中，通常有一个方法可以操作一组数据，有另外一个方法只处理单个元素。不论何时遇到这种情况，都可以使处理单个项目的方法简单地调用可处理任意多个项目的函数而减少工作量。实际上，有时将该方法当作私有方法，或者不作为接口的一部分很有用。这样不管它是否被使用，它的更改都不会影响类的使用，因为对它所做的修改在对象外不可见，只在内部可见。
+
+对于`Fridge`类，创建带有两个参数的内部方法`__add__multi`可将工作量减到最小，方法的两个参数分别是项的名称和项的数量。该方法可将项添加到每个对象的`items`字典中。
+
+@(试一试)[编写内部方法]
+
+当向本章的文件中添加新方法时，确保这些方法正确地缩进于`Fridge`类下，而不是单独出现在顶层。为了明确说明，在这里给出类的声明：
+``` python
+ class Fridge:
+     # the docstring and intervening portions of the class would be here, and
+     # __add_multi should go afterwards.
+     def __add_multi(self, food_name, quantity):
+           """
+         __add_multi(food_name, quantity) - adds more than one of a
+         food item. Returns the number of items added
+
+         This should only be used internally, after the type checking has been done
+            """
+         if (not food_name in self.items):
+             self.items[food_name] = 0
+         self.items[food_name] = self.items[food_name] + quantity
+```
+
+** 示例说明 **
+现在已有方法可将任意数量的食物添加到`Fridge`对象中。然而，这是一个内部方法，不能判定当前传入的类型（`food_name`或`quantity`）是否有效。应当用接口函数做这个检测，因为作为一个认真的程序员，总是需要确定给私有方法传递了正确的值。在允许的每个地方做检查是一个好想法，但在当前这个例子中，不打算在此处检查，因为只会以非常简单的方式使用`__add_multi`方法。
+
+现在`Fridge`类已经拥有了很好用的方法`__add_multi`，之后`add_one`和`add_many`方法都可使用它，而不必交类似的函数写两遍。这就减少了工作量。
+
+@(试一试)[编写接口方法]
+
+为了更快捷，现在可以不输入文档字符串。
+
+「LatestType Page-110」
 ##### 6.2.2 对象和它们的作用域
 
 #### 6.3 本意小结
