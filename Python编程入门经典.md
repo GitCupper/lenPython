@@ -2830,9 +2830,125 @@ Python中的任何一条数据都是对象。每个对象都由3部分组成：�
 
 @(试一试)[编写接口方法]
 
-为了更快捷，现在可以不输入文档字符串。
+为了更快捷，现在可以不输入文档字符串。此处的方法使您在遇到问题时，可以更好地理解代码的实际操作。
 
-「LatestType Page-110」
+如前所示，这些方法需要缩进在`Fridge`类的定义中。看上去在每行的初始位置开始的任何代码实际上是前一行的延续，应当输入到同一行上：
+``` python
+ def add_one(self, food_name):
+     """
+     add_one(food_name) - adds a single food_name to the fridge
+     returns True
+     Raises a TypeError if food_name is not a string.
+     """
+     if type(food_name) != type(""):
+         raise TypeError, "add_one requires a string, given a %s" % type(food_name)
+     else:
+         self.__add_multi(food_name, 1)
+
+     return
+ def add_many(self, food_dict):
+     """
+     add_many(food_dict) - adds a whole dictionary filled with food as keys and  quantities as values.
+     returns a dictionary with the removed food.
+     raises a TypeError if food_dict is not a dictionary
+     returns False if there is not enough food in the fridge.
+     """
+     if type(food_dict) != type({}):
+         raise TypeError("add_many requires a dictionary, got a %s" % food_dict)
+
+     for item in food_dict.keys():
+         self.__add_multi(item, food_dict[item])
+     return
+```
+
+** 示例说明 **
+
+`add_one`和`add_many`的目的类似，并且每个方法都有可以确保它们被正确使用的代码。同时，它们都使用`__add_multi`来完成主要的工作。现在，如果`__add_multi`的工作方式发生改变，开发人员可以节省时间，因为它将自动改变使用它的两个方法的行为方式。
+
+现在已经编写了足够的代码，可将食物放入`Fridge`对象中，但是没有方法可以将放入冰箱的食物拿出来。可以直接访问`object.items`字典，但除了测试的时候，这从不是一个好主意。当然，现在就是测试，为何不这么做呢？
+``` python
+ >>> f = Fridge({"eggs":6, "milk":4, "cheese":3})
+ >>> f.items
+ {'cheese':3, 'eggs':6, 'milk':4}
+ >>> f.add_one("grape")
+ True
+ >>> f.items
+ {'cheese':3, 'eggs':6, 'grape':1, 'milk':4}
+ >>> f.add_many({"mushroom":5, "tomato":3})
+ >>> f.items
+ {'tomato':3, 'cheese':3, 'grape':1, 'mushroom':5, 'eggs':6, 'milk':4}
+ >>>
+```
+目前为止输入的代码都能正常工作！这是较简单的部分。接下来需要增加可以判断冰箱中是否存在某物的方法。
+
+编写代码证实某物是否在冰箱中存在很重要，因为它可用于取出食物的方法中，如`get_one`、`get_many`和`get_ingredients`，从而使这些方法可以检查冰箱中是否有足够多所需的食物。这正是`has`与`has_various`方法的用途：
+``` python
+ def has(self, food_name, quantity=1):
+     """
+     has(food_name, [quantity]) - checks if the string food_name is in the fridge. Quantity defaults to 1
+     Returns True if there is enough, False otherwise.
+     """
+
+     return self.has_various({food_name:quantity})
+
+ def has_various(self, foods):
+     """
+     has_various(foods) determines if the dictionary food_name has enough of every element to satisfy a request.
+     returns True if there's enough, False if there's not or if an element does not exist.
+     """
+
+     tyr:
+         for food in foods.keys():
+             if self.items[food] < foods[food]:
+                 return False
+         return True
+     except KeyError:
+         return False
+```
+在`has`和`has_various`方法完成后，可在测试中使用`Fridge`对象，当阅读代码时，它总是有意义的。
+
+@(试一试)[使用更多的方法]
+
+现在可以使用`python -i`或者`Run with Interpreter`命令调用`ch6.py`文件，这样可以使用添加到`Fridge`类的任何代码。如果出现错误而不是`>>>`提示符，注意招聘的异常，并试着修复缩进问题、拼写错误或者其他基本的错误。
+
+`Fridge`类可按下述方法使用：
+
+``` python
+ >>> f = Fridge({"eggs":6, "milk":4, "cheese":3})
+ >>> if f.has("cheese", 2):
+ ...     print("It's time to make an omelet!")
+ ...
+ It's time to make an omelet!
+```
+
+** 示例说明 **
+
+现在已经定义了新的方法，`f`对象可以使用它们。当用鸡蛋、牛奶以及奶酪重新创建`f`对象时，就从新的`Fridge`类创建了对象，因此它拥有新添加的可用方法。
+
+最后，我们应当讨论从冰箱中取食物的方法了。与向冰箱中添加食物的方法类似，由一个核心方法完成主要工作，所有接口方法者信赖于这个方法：
+``` python
+ def __get_multi(self, food_name, quantity):
+         """
+     _get_multi(food_name, quantity) - removes more than one of a 
+     food item. Returns the number of items removed
+     returns False if there isn't enough food_name in the fridge.
+     This should only be used internally, after the type checking has been
+     done
+         """
+     try:
+         if (self.items[food_name] is None):
+             return False;
+
+         if (quantity > self.items[food_name]):
+             return False;
+         self.items[food_name] = self.items[food_name] - quantity
+     except KeyError:
+         return False
+     return quantity
+```
+当定义了上面的方法后，可以创建`Fridge`类的文档字符串指定的其他方法。其中每个方法都使用了`__get_multi`，因此都可以用最少的额外代码从冰箱中取出食物：
+
+「LatestType Page-113」
 ##### 6.2.2 对象和它们的作用域
 
 #### 6.3 本意小结
