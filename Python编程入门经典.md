@@ -2947,16 +2947,219 @@ Python中的任何一条数据都是对象。每个对象都由3部分组成：�
      return quantity
 ```
 当定义了上面的方法后，可以创建`Fridge`类的文档字符串指定的其他方法。其中每个方法都使用了`__get_multi`，因此都可以用最少的额外代码从冰箱中取出食物：
+``` python
+ def get_one(self, food_name):
+     """
+     get_one(food_name) - takes out a single food_name from the fridge 
+     returns a dictionary with the food: 1 as a result, or False if there 
+ want's
+     enough in the fridge.
+     """
+     if type(food_name) != type(""):
+        raise TypeError("get_one requires a string, given a %s" % type(food_name))
+     else:
+         result = self.__get_multi(food_name, 1)
+     return result
+ def get_many(self, food_dict):
+     """
+     get_many(food_dict) - takes out a whole dictionary worth of food.
+     returns a dictionary with all of the ingredients
+     returns False if there are not enough ingredients or if a dictionary
+     isn't provided.
+     """
 
-「LatestType Page-113」
+     if self.has_various(food_dict):
+         foods_removed = {}
+         for item in food_dict.keys():
+             foods_removed[item] = self.__get_multi(item, food_dict[item])
+         return foods_removed
+
+ def get_ingredients(self, food):
+     """
+     get_ingredients(food) - If passed an object that has the __ingredients__
+         method, get_many will invoke this to get the list of ingredients.
+     """
+     try:
+         ingredients = self.get_many(food.__ingredients__())
+     except AttributeError:
+         return False
+     if ingredients != False:
+         return ingredients
+```
+现在已经编写了一个完全可用的冰箱类。记住，可以将这些内容沿不同的方向引申。不只可以使用`Fridge`类制作煎蛋卷，也可以将它用于其他项目，对产品流程进行建模，例如，熟食品店有10个冰箱，每个冰箱中都装着不同的食品。
+
+当有机会为已经编写的类（或者使用过的类）赋予新的用途时，可利用这个机会，在不影响类的已有功能的基础上向类中添加一些功能以支持新的需求。
+
+例如，在需要若干个冰箱的应用程序中也许需要每个`Fridge`类有一些额外的属性，例如名称（像“奶制品冰箱”）、在商店中的位置、最佳温度设置和尺寸等。可以将这些属性添加到类中，并添加读取和设置这些值的方法，同时仍保持它对于本书中的煎蛋卷示例安全可用。接口的好处在此时就体现出来了。只要`Fridge`类中的接口没有改变，或者只要它们的运行方式保持不变，您就可以任何修改。保持接口行为不变的能力叫做类的稳定性。
+
 ##### 6.2.2 对象和它们的作用域
+如在第5章所见，函数为它们使用的名称创建了自己的空间，也就是作用域。当函数被调用时，声明了名称并赋值之后，只要函数还在使用，任何对名称做出的修改会持续下去。然而，在函数结束运行，并再次被调用时，之前调用过程中所做的工作都丢失了，该函数必须重新开始执行。
+
+对象中的值可被存储，并在对象内关联到`self`（这晨的`self`是指对象本身的名称，它与对象外指向对象的名称，例如`f`是一样的）。只要对象被一个仍在使用的名称引用，它包含的所有值也可用。如果一个对象在函数中被创建，并且没有被该函数返回，即该对象没有被一个具有更长生命周期的名称引用，那么与函数中的其他数据一样，它只在调用它的函数中可用。
+
+如果多个对象先后被创建，它们就可被一起使用。例如，现已经在程序中实现了一个能够工作的`Fridge`的所有特性，还需要`Omelet`对象与其一起协作。
+
+@(试一试)[创建另外一个类]
+
+我们已经创建了一个类`fridge`。用同样的形式，可以创建一个可用的`Omelet`类：
+``` python
+ class Omelet:
+     """This class creates an omelet object. An omelet can be in one of
+     two states: ingredients, or cooked.
+     An omelet object has the following interfaces:
+     get_kind() - returns a string with the type of omelet
+     set_kind(kind) - sets the omelet to be the type named
+     set_new_kind(kind, ingredients) - lets you create an omelet
+     mix() - gets called after all the ingredients are gathered from the fridge
+     cook() - cooks the omelet
+     """
+     def __init__(self, kind="cheese"):
+         """ __init__(self, kind="cheese")
+         This initializes the Omelet class to default to a cheese omelet.
+         Other methods
+         """
+         self.set_kind(kind)
+         return
+```
+
+** 示例说明 **
+
+现在有一个类，它的目的很明确。在第5章的函数中，已经见过大多数这样的行为，但是现在有了一个结构，可以在其中整合所有这些行为。
+
+`Omelet`类有接口方法，使得它可与`Fridge`对象协作，并且与第5章一样，它仍具备创建定制的煎蛋卷的能力。
+
+下面所有代码都必须在`Omelet`类定义下缩进一个级别：
+``` python
+ def __ingredients__(self):
+         """Internal method to be called on by a fridge or other objects
+     that need to cat on ingredients.
+         """
+     return self.needed_ingredients
+
+ def get_kind(self):
+     return self.kind
+
+ def set_kind(self, kind):
+     possible_ingredients = self.__known_kinds(kind)
+     if possible_ingredients == False:
+         return False
+     else:
+         self.kind = kind
+         self.needed_ingredients = possible_ingredients
+
+ def set_new_kind(self, name, ingredients):
+     self.kind = name
+     self.needed_ingredients = ingredients
+     return
+
+ def __know_kinds(self, kind):
+     if kind == "cheese":
+         return {"eggs":2, "milk":1, "cheese":1}
+     elif kind == "mushroom":
+         return {"eggs":2, "milk":1, "cheese":1, "mushroom":2}
+     elif kind == "onion":
+         return {"eggs":2, "milk":1, "cheese":1, "onion":1}
+     else:
+         return False
+
+ def get_ingredients(self, fridge):
+     self.from_fridge = fridge.get_ingredients(self)
+
+ def mix(self):
+     for ingredient in self.from_fridge.keys():
+         print("Mixing %d %s for the %s omelet" %
+ self.from_fridge[ingredient], ingredient, self.kind))
+     self.mixed = True
+
+ def make(self):
+     if self.mixed == True:
+         print("Cooking the %s omelet!" % self.kind)
+         self.cooked = True
+```
+现在有一个`Omelet`类可以创建`Omelet`对象。`Omelet`类与第4章和第5章中制作煎蛋卷的过程有相同的特性，但更简单易用，因为所有我都整合在了一起，并且`Omelet`的外在表现集中到几个简单的接口。
+
+现在有两个类，在用`python -i`或者`Run with Interpreter`命令加载它们后，可以制作一个煎蛋卷：
+``` python
+ >>> o = Omelet("cheese")
+ >>> f = Fridge({"cheese":5, "milk":4, "eggs":12})
+ >>> o.get_ingredients(f)
+ >>> o.mix()
+ Mixing 1 cheese for the cheese omelet
+ Mixing 2 eggs for the cheese omelet
+ Mixing 1 milk for the cheese omelet
+ >>> o.make()
+ Cooking the cheese omelet!
+```
+这并不比在第5章中制作一个煎蛋卷更难或者更简单。然而，当同时要处理多件事情时，使用对象的好处变得很明显。例如，需要同时制作多个煎蛋卷：
+``` python
+ >>> f = Fridge({"cheese":5, "milk":4, "eggs":12, "mushroom":6, "onion":6})
+ >>> o = Omelet("cheese")
+ >>> m = Omelet("mushroom")
+ >>> c = Omelet("onion")
+ >>> o.get_ingredients(f)
+ >>> o.mix()
+ Mixing 1 cheese for the cheese omelet
+ Mixing 2 eggs for the cheese omelet
+ Mixing 1 milk for the cheese omelet
+ >>> m.get_ingredients(f)
+ >>> m.mix()
+ Mixing 1 cheese for the mushroom omelet
+ Mixing 2 eggs for the mushroom omelet
+ Mixing 1 milk for the mushroom omelet
+ Mixing 2 mushroom for the mushroom omelet
+ >>> c.get_ingredients(f)
+ >>> c.mix()
+ Mixing 1 cheese for the onion omelet
+ Mixing 2 eggs for the onion omelet
+ Mixing 1 milk for the onion omelet
+ Mixing 1 onion for the onion omelet
+ >>> o.make()
+ Cooking the cheese omelet!
+ >>> m.make()
+ Cooking the mushroom omelet!
+ >>> c.make()
+ Cooking the onion omelet!
+```
+花几分钟时间将上面的代码与第5章中功能相同的函数进行比较，您将意识到为什么要用这种方式编写程序，以及这样的编程方式（叫做面向对象编程）为什么会用于编制大型系统。
+
+只要冰箱里有需要的材料，制作不同类型的煎蛋卷变得异常容易：仅需调用该类创建一个新对象，之后调用每个`Omelet`对象的3个方法。当然，可以将这三个方法减少为一个。
 
 #### 6.3 本意小结
 
+本章介绍了Python中的类和对象，这是面向对象编程的基本概念。
+
+在类中使用的函数叫做方法，每个类都有一个特殊的名称`self`，当`self`被调用时，它包含对象中所有的数据和方法。
+
+使用类的名称并在后面跟着圆括号“()”来创建该类的对象。此时可以给定初始化参数，当然不论是否提供参数，新创建的对象都将调用方法`__init__`。与普通的函数一样，类中的方法（包括`__init__`）可以接收参数，包括可选的和默认的参数。
+
+创建一个类的过程包括决定创建哪些方法，以完成期望的功能。类中的方法通常可分为两类：一类是公共接口，应当在对象外部调用，另一类是私有方法，应当只能被对象内部的其他方法调用。接口应当尽量不变，而内部的私有方法可以改变，而不影响类的使用方式。当使用其他人编写的类时，记住这一点尤其重要。Python认为在对象作用域内，以两个下划线形状的任何名称都是私有属性，因此您也应当遵守这个约定。其他名称一般被认为是公共的。
+
+** 本章要点： **
+
+* 为了详细说明类的使用方法，应当为这个类创建文档字符串，即在类定义后的第一行输入一个字符串。文档字符串最好能够提供期望被使用的方法的名称和用途。在文档字符串中包含对整个类的解释也不是一个坏主意。
+* 类中定义的所有名称（数据和方法）在每个创建的对象中都不同。当一个对象调用某个方法时，该方法改变那个对象中的数据，而同一类型的其他对象则不受影响。Python中内置的字符串对象就是一个示例，它们包含特殊的方法，可以帮助完成普通的文本处理任务。
+* 为了使对象易用，通常提供行为类似的多个接口。为了节省工作，这些接口可以找到调用内部方法的一些方式，而内部方法比它们更复杂，接收更多的参数。这有两个好处。第一，调用这些方法的代码更易读，程序员不必记住参数的名称，因为方法的名称本身就提供了程序员所需的信息。第二，只改变内部方法就可以改变所有相关接口的行为。这在修复问题时尤其有用，因为一个修复就可改正所有接口的工作方法。另外，为其他方法提供这种支持的方法本身也可以是公共接口。像这样一个特别有用的方法应当是私有的还是公共的并没有严格的规则，这完全由开发人员决定。
+* 编写对象的一个目的是尽量少编写重复代码，而是提供尽量多的特性。创建使用对象的类可以节省大量输入，因为它们通常比数据和函数分开更易于操作，原因在于同一个类中的方法总是可以确定它们使用的其他方法和数据是存在的。可以写一组相互依赖的类，对相互协作的事物建模。第7章将介绍如何组织这些相互依赖和合作的类。
+* 本章最后介绍了Python的代码编辑器Shell，它可以帮助研究对象，只要输入一个句点，它将显示该对象所有接口的名称。这比输入`dir`得到相同信息更简单，因为代码编辑器能够以便捷和易于使用的方式显示信息。
+
 #### 6.4 习题
+
+下面每个习题都是建立在前面习题的基础之上。
+1. 向`Omelet`类的`mix`方法中加入一个可以关闭创建消息的选项，方法是添加一个默认为`True`的参数，表示应当打印“mixing...”消息。
+2. 在`Omelet`类中创建一个方法`quick_cook`，该方法使用习题1中新的`mix`方法，它接受3个参数：煎蛋卷的类型、需要的数量，以及它们来自于哪个`Fridge`。`quick_cook`应当实现需要的功能，而不只是3个方法调用，但是它应当使用已有的方法完成这些功能，包括已修改的`mix`方法，它关掉了`mix`的消息。
+3. 试着为`Omelet`类中所有没有文档字符串的方法创建一个文档字符串。确保在每个文档字符串中包含方法的名称，方法需要的参数，方法的功能，成功时返回的值，以及当发生错误时返回的结果（或者抛出什么样的异常）。
+4. 创建一个`Omelet`对象，查看已创建的文档字符串。
+5. 创建可以被`Omelet`类调用的`Recipe`类，它可以得到食物成分。`Recipe`类应当拥有`Omelet`类包括的煎蛋卷成分列表，还可以包含其他任何喜欢的食物。`Recipe`类应当有获得食谱的方法`get(recipe_name)`，以及添加食谱并对它命名的方法`create(recipe_name, ingredients)，其中`ingredients`是一个字典，与`Fridge`类和`Omelet`类中用到的字典格式相同。
+6. 更改`Omelet`类中的`__init__`方法，它可以接受`Recipe`类作为输入。为此，可执行如下操作：
+> a. 创建一个名称self.recipe，这是每个`Omelet`对象都有的名称。
+> b. `Omelet`类的内部方法`__known_kinds`存储处方。更改`__known_kinds`，在期望的煎蛋卷类中调用`self.recipe.get()`来使用食谱。
+> c. 更改`set_new_kind`方法，将新的食谱添加`self.recipe`中，之后调用`set_kind`，将当前煎蛋卷的类型设置为刚添加到食谱中的类型。
+> d. 修改`__known_kinds`，使用`recipe`的`get`方法找出煎蛋卷的成分。
+7. 尝试使用所有的新类和新方法，判断您是否已经理解了它们。
 
 ### 第7章 缓和程序
 
+「LatestType Page-120」
 #### 7.1 模块
 
 ##### 7.1.1 导入可用模块
