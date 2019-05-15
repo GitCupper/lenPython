@@ -3255,12 +3255,52 @@ Python Shell中的代码编辑器提供的特性可以在开发人员输入代�
 根据这些定义理解`argv`，可看出它的意思就是像列表那样访问的命令行参数。将argv`转换成英语（或者任何其他非程序语言）中简短易理解的有意义的词非常困难，因此词`argv`被一直保留下来。
 
 为了从命令行中输出参数，只需像使用其他列表那样使用`sys.argv`:
+``` python
+ >>> import sys
+ >>> print("This was given the command line parameters: %s" % sys.argv)
+```
+为了在其他平台上执行相同的过程，需要从代码编辑器中启动。选择`File|Run Options`，并在`Other argv`域中输入希望的参数。前面从第5章开始也用过这个功能，但是使用`Run Options`对话框设置启动程序时的命令行，这很新奇。
 
-「LatestType Page-124」
+为了测试不断变化、并且不以交互式方式使用的程序，一般来说最好使用`python -i`或者`Run with Interpreter`，这样就可以尝试从头开始重复运行程序。图7-2显示了一个列出了可选命令行选项的弹出窗口。
+!(图7-2)[]
+
+@(试一试）[打印`sys.argv`]
+
+任何时刻使用`File`菜单的`Run with Interpreter`选项运行程序，都可得到以列表形式输出的`sys.argv`。例如，如果在`Other argv`中提供的命令行参数是“test 123 test”，程序将打印如下信息（这是Windows系统上的运行结果，UNIX Shell下的`sys.path`看起来完全不同）：
+``` python
+ This was given the command line parameters: ['D:\\Documents\\Chapter7.py', 'test', '123', 'test']
+
+** 示例说明 **
+
+`sys.argv`列表的第一个元素永远都是程序的名称，其他元素都是`sys.argv`列表的元素，从位置`1`开始。
+
+模块中的类的访问方式与其他任何名称的访问方式相同。对于提供了类的模块，其调用与预期一样，即在拼写出的完整路径后加上圆括号，例如调用`Foods.Recipe()`。
+
 ##### 7.1.4 改变导入方式
+
+`Import`可以单独使用，此时它会创建一个命名的作用域，模块中的所有内容都可以从该作用域引用。有时，将模块的特定部分引入到程序顶层的全局作用域很有用。这样，在访问函数或者类之前将不必输入模块名称，从而可以减少输入量并使用代码变得直接易读。利用于面的代码和`Foods`模块可创建一个洋葱煎蛋卷对象：
+``` pyhton
+ import Foods
+ r = Foods.Recipe()
+ onion_ingredients = Foods.Omelet(r, "onion")
+```
+该示例表明，希望调用或者访问模块中的某方法时，要拼写出完整的路径。您很快就会感到厌烦。然而，将`from`修饰符用于`import`命令，可以使用名称与代码更接近：
+``` python
+ from Foods import Omelet
+ from Foods import Recipe
+ r = Recipe()
+ onion_ingredients = Omelet(r, "onion")
+```
+如果必须深入多个级别，例如（制成的食物）`Foods.Recipes.Breads.Muffins.Bran`，并且要在当前作用域直接使用`Bran`中的名称，需要写类似的代码，如下所示：
+``` python
+ from Foods.Recipes.Breads.Muffins import Bran
+```
 
 #### 7.2 包
 
+在单独的文件中创建一个模块后，该单独的文件经常会陷入组织问题。主要问题是，单独的类在单独使用时更有用，它比模块中其余的类有更多代码。这也是将它移动单独的文件中的好理由，但这会毁坏使用该模块的代码！然而，有一个解决办法。
+
+「LatestType Page-126」
 #### 7.3 模块和包
 
 ##### 7.3.1 将所有内容引入当前作用域
