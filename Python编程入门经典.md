@@ -3310,10 +3310,37 @@ Python Shell中的代码编辑器提供的特性可以在开发人员输入代�
 
 为了将已经编写的3个类作为`Kitchen`包的一部分，在`Kitchen`目录下创建4个文件，将相应的类放到每个文件中，并以类的名称命名文件。记住，在`Windows`所有版本下，应当将看到的斜杠（`/`）替换为一个反斜杠（`\`），因为`Windows`用它分隔目录。换言之，在`Kitchen`目录中创建文件`Kitchen/Fridge.py`，并仅将`Fridge`类放到该文件中。
 
+为每个类创建一个文件，并创建`__init__.py`文件：
 
-「LatestType Page-126」
+* `Kitchen/Fridge.py`：该文件包含`ch6.py`中从`Fridge`类的声明处开始的，`Fridge`类的所有代码和注释。
+* `Kitchen/Omelet.py`：该文件包含`Omelet`类的所有代码和注释。使用在第6章的习题中修改后的`Omelet`类。
+* `Kitchen/Recipe.py`：该文件包含`Recipe`类的所有代码和注释。
+* `Kitchen/__init__.py`（记住在文件名前后各有两个下划线）：本文件是空的。
+
+** 示例说明 **
+
+现在，除了为每个类创建了文件，还创建了一个`__init__.py`文件，可以导入`Kitchen`包了。然而，导入`Kitchen`后，Python只计算`__init__.py`。这是个非常重要的细节，因为如果没有在`__init__.py`中放置代码，就将永远看不到代码。目前，没有导入任何东西，您默认地导入了`Kitchen`。
+
+导入`Kitchen`后，为了使所有类可用，需要将显式的`import`语句放入`__init__.py`文件：
+``` python
+ from Fridge import Fridge
+ from Recipe import Recipe
+ from Omelet import Omelet
+```
+向`__init__.py`加入这些行后，导入`Kitchen`包后这些类都变得可用：
+``` python
+ >>> import Kitchen
+ >>> r = Kitchen.Recipe()
+ >>> r.recipes
+ {'cheese':{'cheese':1, 'eggs':2, 'milk':1}, 'onion':
+ {'cheese':1, 'eggs':2, 'milk':1, 'onion':1}, 'mushroom':
+ {'cheese':1, 'eggs':2, 'milk':1, 'mushroom':2}}
+```
+此外，它还没有带来很多好处，因为这只是一个非常小的项目，但是对于逐渐增长的项目，这个工具非常重要，它使得多个开发人员共同进行开发变得容易，通过将函数和类自然地分配到多个文件中，每个程序员可以在自己那组文件上工作。
+
 #### 7.3 模块和包
 
+「LatestType Page-126」
 ##### 7.3.1 将所有内容引入当前作用域
 
 ##### 7.3.2 重新导入模块和包
