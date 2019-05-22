@@ -3498,11 +3498,28 @@ Python提供了丰富的输入/输出函数，本章将介绍其中使用广泛�
      a.write("This is how you create a new text file")
      a.close()
 ```
-可以从创建一个新的`make_text_file()`函数开始。
+可以从创建一个新的`make_text_file()`函数开始。告诉Python打开一个名为`test.txt`的文件。由于Python找不到该文件，就会创建该文件（注意，如果该文件存在，Python会删除它并创建一个新文件，因此要小心使用这项技术！后面将学习如何在创建一个文件之前检查它是否已经存在）。“`W`”参数告诉Python打算向文件中写数据，如果没有指定该参数，Python认为您打算从文件中读数据，若文件不存在，它将抛出异常。接下来，向文件中添加一行文件：“This is how you create a new text file”。
 
-「LatestType Page-135」
+花点时间浏览Python安装目录，它应该类似于“`C://Python31`”。可以注意到一个新的`test.txt`的文件已经被创建。如果双击它，可以看到文件中已存在上面的示例中向其添加的文本。恭喜，您已经创建了第一个文件！
+
+现在已经使用上面的技术创建了一个文件，接下来创建一个程序，首先检查某个文件是否已经存在。如果存在，将返回一个错误消息；如果不存在，程序将创建文件。输入下面的代码：
+``` python
+ >>> import os
+ >>> def make_another_file():
+         if os.path.isfile('test.txt'):
+             print("You are trying to create a file that already exists!")
+         else:
+             f = open('test.txt', "w")
+             f.write("This is how you create a new text file")
+         ...
+ >>> make_another_file()
+ "You are trying to create a file that already exists!"
+```
+打开一个文件时，利用本章讨论的其他文件处理函数，可以指定一个相对路径（相对于当前目录的路径，当前目录是指程序或者Python正在运行的地方）或者一个绝对路径（以磁盘或者文件系统的根目录开始的路径）。例如，`/tmp/sample.txt`是一个绝对路径，而`sample.txt`由于没有指定上层目录，是相对路径。
+
 ##### 8.1.2 向文件中追加文本
 
+「LatestType Page-135」
 ##### 8.1.3 读文本文件
 
 ##### 8.1.4 文件异常
