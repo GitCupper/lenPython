@@ -3624,11 +3624,60 @@ Python提供了丰富的输入/输出函数，本章将介绍其中使用广泛�
 
 #### 8.2 路径和目录
 
-「LatestType Page-138」
+Windows、Linux、UNIX和Mac OS/X上的文件系统有许多共同点，但是它们的某些规则、约定和功能略有不同。例如，Windows使用反斜杠将一个路径中的目录名称分隔开，而Linux和UNIX（Mac OS/X是UNIX的一种）使用正斜杠。除此之外，Windows使用驱动器名称，而其他系统则不用。这些不同之处是编写跨平台程序的障碍。Python将路径和目录操作的繁琐细节隐藏在`os`模块中，以方便程序员使用。然而，使用`os`并不能解决所有移植问题，`os`模块中的一些函数并不是在所有平台上都可用。本小节仅描述在所有平台上都可用的函数。
+
+即使打算仅在一个平台上使用程序，并且预计能够避免大多数这样的问题，但如果程序很有用，很可能某一天有人会在其他平台上尝试运行该程序。因此最好使用`os`模块，它提供了许多有用的服务。不要忘记首先要导入`os`，然后再使用它。
+
 #### 8.3 OS中的异常
+
+`os`模块中的函数在失败时会抛出`OSError`异常。如果希望程序在出错时行为友好，那么必须处理这个异常。与`IOError`一样，异常字符串表示描述了遇到的问题。
 
 ##### 8.3.1 路径
 
+模块`os`包含另外一个模块`os.path`，它提供了操作路径的函数。由于路径也是字符串，因此可以使用普通的字符串操作方法组合和分解文件路径。但是如果这样，代码可能不易移值，也不能处理`os.path`知道的一些特殊情形。使用`os.path`操作路径，可使程序易于移植，且可以处理一些特殊情形。
+
+使用`os.path.join`可将目录名称组合成路径。Python使用适合操作系统的路径分隔符。在使用之前不要忘记导入`os.path`模块。例如，在Windows系统上，输入如下代码：
+``` python
+ >>> import os.path
+ >>> os.path.join("sankes", "Python")
+ 'sankes\\Python'
+```
+在Linux系统上，在`os.path.join`中使用相同的参数会得到如下不同的结果：
+``` python
+ >>> import os.path
+ >>> os.path.join("snakes", "Python")
+ 'sankes/Python'
+```
+函数`os.path.split`具有相反的功能，它将路径的最后一个组件提取出来。该函数返回包含两个项的元组：父目录的路径以及最后一个路径组件。这里有一个示例：
+``` python
+ >>> os.path.split("C:\\Program Files\\Python30\\Lib")
+ ('C:\\Program Files\\Python30', 'Lib')
+```
+在UNIX或者Liunx系统上的结果如下：
+``` python
+ >>> os.path.split("/usr/bin/python")
+ ('/usr/bin', 'python')
+```
+自动分解序列在这里派上了用场。`os.path.split`返回一个元组，该元组可分成几个部分，分别赋予等号左边的组件：
+``` python
+ >>> parent_path, name = os.path.split("C:\\Program Files\\Python30\\Lib")
+ >>> print(parent_path)
+ C:\Program Files\Python30
+ >>> print(name)
+ Lib
+```
+尽管`os.path.split`仅将路径的最后部分分离开，但是有时候也许希望将一个路径完全分解为若干目录的名称。写一个这样的函数并不困难，只需对该路径调用`os.path.split`，之后在父目录的路径上再次调用`os.path.split`，依此类推，直到得到根目录。实现该功能的一种得体的方式是使用递归函数，即自己调用自己的函数。它的形式如下：
+``` python
+ def split_fully(path):
+     parent_path, name = os.path.split(path)
+     if name == "":
+         return (parent_path, )
+     else:
+         return split_fully(parent_path) + (name, )
+```
+最关键的一行是最后一行，此处函数调用自己将父目录分解成各个组件。路径的最后一个组件`name`被添加到完全分解的父路径后面。`split_fully`中间的行阻止函数无限将地调用自己。当`os.path.split`不能继续分解一个路径时，它返回的第二个组件为空，`split_fully`注意到这一点并只返回父路径，而不再调用自身。
+
+「LatestType Page-140」
 ##### 8.3.2 目录内容
 
 ##### 8.3.3 获取文件信息
