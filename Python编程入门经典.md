@@ -3677,9 +3677,80 @@ Windows、Linux、UNIX和Mac OS/X上的文件系统有许多共同点，但是�
 ```
 最关键的一行是最后一行，此处函数调用自己将父目录分解成各个组件。路径的最后一个组件`name`被添加到完全分解的父路径后面。`split_fully`中间的行阻止函数无限将地调用自己。当`os.path.split`不能继续分解一个路径时，它返回的第二个组件为空，`split_fully`注意到这一点并只返回父路径，而不再调用自身。
 
-「LatestType Page-140」
+函数可以安全地调用自身，因为Python记录了函数每一个运行实例的参数和局部变量，即使运行实例是从另一个运行实例中调用的。 在这种情形下，当`split_fully`调用自身时，即使内部（第二个）实例给`name`赋予了一个不同的值，外部（第一个）实例也不会丢失`name`的值，因为每个函数运行实例都有自己的变量`name`的副本。当内部实例返回后，外部实例继续使用它在进行递归调用时拥有的该变量的值。
+
+编写递归函数时，要确保它不会无限次地调用自身。无限次调用自身是很糟糕的，因为它永远都不会返回结果（实际上，这种情形下，Python会用守记录所有调用的空间，并抛出异常）。函数`split_fully`不会无限次调用自身，因为最终的`path`会足够短，并且`name`会变成一个空字符串，此时该函数不会再调用自身，而是直接返回。
+
+该函数中有两处使用单个元素的元组，注意必须在圆括号中包含一个逗号，没有逗号，Python会将圆括号解释为普通的分组圆括号，就像在在数学表达式中那样：`(name,)`是一个包含单个元素的元组，但`(name)`与`name`完全相同。
+
+这里有一个可以运行的函数：
+``` python
+ >>> split_fully("C:\\Program Files\\Python31\\Lib")
+ ('C:\\', 'Program Files', 'Python31', 'Lib')
+```
+当有一个文件名称时，可以用`os.path.splitext`分解出它的扩展名：
+``` python
+ >>> os.path.splitext("image.jpg")
+ ('image', '.jpg')
+```
+对`splitext`的调用返回一个包含两个元素的元组，因此可以用上面的方式提取出扩展名：
+``` python
+ >>> parts = os.path.splitext("image.jpg")
+ >>> extension = parts[1]
+```
+实际上，并不需要变量`parts`。可以从`splitext`的返回值直接提取出第二个组件`extension`：
+``` python
+ >>> extension = os.path.splitext("image.jpg")[1]
+```
+
+`os.path.normpath`也能派上用场，它可以规范化或“清理”路径：
+``` python
+ >>> print(os.path.normpath(r"C:\\Program Files\Perl\..\Python30"))
+ C:\Program Files\Python30
+```
+注意如何通过备份目录组件去掉“`..`”，以及如何修复双分隔符。函数`os.path.abspath`与`os.path.normpath`类似，它将一个相对路径（相对于当前目录的路径）转变为一个绝对路径（从驱动器或者文件系统的根目录开始）：
+``` python
+ >>> print(os.path.abspath("other_stuff"))
+ C:\Program Files\Path30\other_stuff
+```
+输出取决于调用`abspath`时的当前路径。您也许已经注意到，即使在Python目录下没有叫做`other_stuff`的文件或者目录存在，这个函数仍然可以正常工作。`os.path`下面的所有路径操作函数都不检查正在操作的路径是否真正存在。
+
+可以使用`os.path.exists`判断某个路径是否实际存在。它仅简单地返回`True`或者`False`：
+``` python
+ >>> os.path.exists("C:\\Windows")
+ True
+ >>> os.path.exists("C:\\Windows\\reptiles")
+ False
+```
+当然，如果使用的不是Windows，或者Windows安装在另外一个目录（例如`C:\WinNT`）中，这两个调用者会返回`False`！
+
+
 ##### 8.3.2 目录内容
 
+现在知道如何构造任意路径并且将它们分开。但是如何才能找出硬盘上实际存在哪些内容呢？`os.listdir`模块会返回一个目录下所有名称条目，包括文件和子目录等内容。
+
+@(试一试)[获取目录的内容]
+
+下面的代码将得到一个目录下的条目列表。在Windows系统下，可以列出Python安装目录下的内容：
+``` python
+ >>> os.listdir("C:\\Python31")
+ ['Chapter 5', 'chapter 6', chapter 7', 'DLLs', 'Doc', 'ham', 'include', 'Lib', 'libs', 'LICENSE.txt', 'maybe', 'NEWS.txt', 'python.exe', 'pythonw.exe', 'README.txt', 'tcl', 'Test', 'Test.py', 'test.txt', 'test2.txt', 'test6.txt', 'tester.py', 'test.txt', 'Tools', 'w9xpopen.exe']
+```
+注意您的结果有可能不同，因为显示的结果取决于目录下的文件。
+
+如果您使用其他的操作系统，或者在另外目录下安装Python，请将示例中的路径替换为其他路径。使用“`.`”可以列出当前目录。当然，如果列出一个不同的目录，将会得到一个不同的名称列表。
+
+无论哪种情况，都应该注意一些重要的事情。首先，返回的结果是目录条目的名称，，而不是完整路径。如果需要某个条目的完整路径，必须使用`os.path.join`构造它。其次，结果中既有文件名称也有目录名称，从`os.listdir`的结果中无法区分两者。最后，注意结果中不包含“`.`”和“`..`”，这两个代表当前目录和其父目录的特殊目录名称。
+
+编写一个函数，列出某个目录中的内容，但是需要打印出完整路径，而不是仅打印文件和子目录的名称，并且要求每行打印一个条目：
+``` python
+ def print_dir(dir_path):
+     for name in os.listdir(dir_path):
+         print(os.path.join(dir_path,name))
+```
+
+
+「LatestType Page-142」
 ##### 8.3.3 获取文件信息
 
 ##### 8.3.4 重命名、移动、复制和删除文件
