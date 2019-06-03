@@ -3748,15 +3748,96 @@ Windows、Linux、UNIX和Mac OS/X上的文件系统有许多共同点，但是�
      for name in os.listdir(dir_path):
          print(os.path.join(dir_path,name))
 ```
+该函数在`os.listdir`返回的列表上循环，并且对每个条目调用`os.path.join`，在打印之前构造完整路径。尝试下面的代码：
+``` python
+ >>> print_dir("C:\\Python30")
+ C:\Python31\DLLs
+ C:\Python31\Doc
+ C:\Python31\ham
+ C:\Python31\include
+ C:\Python31\Lib
+ C:\Python31\libs
+ C:\Python31\LICENSE.txt...
+```
+以上代码并不能保证`os.listdir`返回的条目列表以某种特定的方式排序，也就是说顺序是任意的。可能希望条目以某种特定顺序排序，以满足应用需求。由于它是字符串列表，因此可以使用`sorted`函数将它排序。
 
+默认情况下，得到的结果按字母表排序，并区分大小写：
+``` python
+ >>> sorted(os.listdir("C:\\Python31"))
+ ['DLLs', 'Doc', 'LICENSE.txt', 'Lib', "NEWS.txt', 'README.txt', 'Removepywin322.exe', 'Scripts', 'Tools', 'include', 'libs', py.ioc', 'pyc.ico', 'pyhton.exe', 'pythonw.exe', 'pywin32-wininst.log', 'tcl', 'w9xpopen.exe']
+```
+@(试一试)[列出桌面或者主目录的内容]
 
-「LatestType Page-142」
+使用`print_dir_by_ext`列出桌面或者主目录的内容。Windows的桌面是一个文件夹，它的典型路径是`C:\\Documents and Settings\\username\\Desktop`，其中`username`是账户名称。在GUN/Linux或者UNIX上，主目录的典型路径是`/home/username`。这是您期望的输出吗？
+
 ##### 8.3.3 获取文件信息
+
+可以很容易地判断出一个路径是指向一个文件还是指向一个目录。如果是指向文件，`os.path.isfile`将返回`True`；如果是指向目录，`os.path,isdir`将返回`True`。如果路径不存在，这两个函数都返回`False`：
+``` python
+ >>> os.path.isfile("C:\\Windows")
+ False
+ >>> os.path.isdir("C:\\Windows")
+ True
+```
+** 其他类型的目录条目 **
+在某些平台下，一个目录也许包含许多其他类型的条目，例如符号链接、套接字还有设备等。这些类型的条目的具体含义取决于特定的平台，相关内容比较复杂，这里不进行讨论。然而，`os`模块为检查这些条目提供了支持，请查阅模块的文档了解与您的平台有关的细节。
+
+** 递归目录列表 **
+可以将`os.path.isdir`和`os.listdir`结合起来实现一些有用的操作：例如，递归地处理子目录。可以列出一个目录的内容，它的子目录，子目录的子目录，依此类推。对于这个目的，编写一个递归函数很有用。当函数找到一个子目录时，它调用自身，列出该子目录的内容：
+``` python
+ def print_tree(dir_path):
+     for name in os.listdir(dir_path):
+         full_path = os.path.join(dir_path, name)
+         print(full_get)
+         if os.path.isdir(full_path):
+             print_tree(full_path)
+```
+注意上央的函数与之前编写的`print_dir`函数很类似。然而，这个函数为每个条目构造了完整路径`full_path`，因为这既符合打印的需求，也考虑到子目录的需求。最后两行代码检查它是否是子目录，如果是，该函数在继续运行之前通过调用自己列出子目录的内容。如果试用该函数，确保没有对一个非常大的目录树调用该函数，否则，不得不等待它打印出树中每一个子目录和文件的完整路径。
+
+模块`os.path`中的其他函数提供了关于文件的信息。例如，`os.path.getsize`在不必打开和扫描某个文件的情况下以字节为单位返回该文件的大小。使用`os.path.getmtime`可以得到文件上次被修改的时间。返回的值是1970年起到文件上次被修改的时间之间的秒数，而这不是用户喜欢的日期的格式。必须调用另外一个函数`time.ctime`，将该结果转换为易于理解的形式（不要忘了首先要导入`time`模块）。这里有一个示例输出了Python安装目录上次被修改的时间，这可能是在计算机上安装Python的日期和时间：
+``` python
+ >>> import time
+ >>> mod_time = os.path.getmtime("C:\\Python30")
+ >>> print(time.ctime(mod_time))
+ Thu Mar 15 01:36:26 2009
+```
+现在知道了如何修改`print_dir`来打印目录的内容，包括每个文件的大小和修改时间。为了简单，下面的版本只打印条目名称，而不打印它们的完整路径：
+``` python
+ def print_dir_info(dir_path):
+     for name in os.listdir(dir_path):
+         full_path = os.path.join(dir_path, name)
+         file_size = os.path.getsize(full_path)
+         mod_time = time.ctime(os.path.getmtime(full_path))
+         print("%-32s:%8d bytes, modified %s" % (name, file_size, mode_time))
+```
+最后一条语句使用了第1章和第2章中介绍的Python内置的字符串格式化方法，以产生整洁的对齐的输出。如果希望输出其他文件信息，请浏览`os.path`模块的文档，学习如何获取这些信息。
 
 ##### 8.3.4 重命名、移动、复制和删除文件
 
+模块`shutil`中包含了操作文件的函数。可以使用函数`shutil.move`重命名一个文件：
+``` python
+ >>> import shutil
+ >>> shutil.move("server.log", "server.log.backup")
+```
+或者，可以使用它将一个文件移动到另外一个目录下：
+``` python
+ >>> shutil.move("old mail.txt", "C:\\data\\archive\\")
+```
+您也许已经注意到，`os`也包含一个可以重命名和移动文件的函数`os.rename`。一般应当使用`shutil.move`，因为使用`os.rename`可能并不能指定一个目录名称作为目标，而且在某些系统上，`os.rename`不能将一个文件移动到另外一个磁盘或者文件系统中。
+
+`shutil`模块还提供了`copy`函数，它将一个文件复制为具有一个新名称的文件，或者复制到一个新目录下。可以简单地使用如下代码：
+``` python
+ >>> os.remove("junk.dat")
+```
+如果您是一位老派的UNIX黑客（或者希望自己冒充成一个黑客），可能更喜欢`os.unlink`，它能完成相同的操作。
+
+** 文件权限 **
+
+文件权限在不同的平台上的工作方式是不同的，解释它们超出了本书的讨论范围。然而，如果需要改变一个文件或者目录的权限，可以使用`os.chmod`函数。它与UNIX或者Linux的系统调用`chmod`的工作方式相同。参考`os`模块的文档了解其细节。
+
 ##### 8.3.5 示例：轮换文件
 
+「LatestType Page-145」
 ##### 8.3.6 创建和删除目录
 
 ##### 8.3.7 通配
