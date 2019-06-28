@@ -3836,8 +3836,43 @@ Windows、Linux、UNIX和Mac OS/X上的文件系统有许多共同点，但是�
 文件权限在不同的平台上的工作方式是不同的，解释它们超出了本书的讨论范围。然而，如果需要改变一个文件或者目录的权限，可以使用`os.chmod`函数。它与UNIX或者Linux的系统调用`chmod`的工作方式相同。参考`os`模块的文档了解其细节。
 
 ##### 8.3.5 示例：轮换文件
+在这个示例中，将处理一个更困难的实际的文件管理任务。假设需要保留一个文件的多个老版本。例如，系统管理员要保留老版本的系统日志文件。通常，文件的老版本的名称有一个数字后缀，例如`web.log.1`、`web.log.2`等，其中较大的数字代表较老的版本。为了给文件的新版本预留空间，这些老版本被轮换：目前的版本`web.log`变成了`web.log.1`，而`web.log.1`则变成了`web.log.2`，依此类推。
 
-「LatestType Page-145」
+手动实现该功能非常乏味，但是Python却可以很快地实现。有几个棘手的问题需要考虑。首先，文件当前版本与老版本的命名方式不同：老版本有一个数字后缀，而当前版本没有。解决这个问题的一个方法是将当前版本的命名方式不同：老版本有一个数字后缀，而当前版本没有。解决穿上问题的一个方法是将当前版本作为版本`0`。函数`make_version_path`为当前版本和老版本构造了正确的路径。
+
+另外一个不易注意的地方是必须确保首先要重命名老版本。例如，如果在重命名`web.log.2`之前将`web.log.1`重命名为`web.log.2`，后者将被重写，它之前的内容就会丢失，这并不是你所希望的。递归函数将再次伸出援手。该函数可以调用它自身，在重写下一个老版本的的日志文件之前轮换它：
+``` python
+ import os
+ import shutil
+
+ def make_version_path(path, version):
+     if version == 0:
+         # No suffix for version 0, the current version.
+         return
+     else:
+         # Append a suffix to indicate the older version.
+         return path + "." + str(version)
+
+ def rotate(path, version=0):
+     # Construct the name of the version we're rotating.
+     old_path = make_version_path(path, version)
+     if not os.path.exists(old_path):
+         # It doesn't exist, so complain.
+         raise IOError("'%s' doesn't exist" % path)
+     # Construct the new version name for this file.
+     new_path = name_version_path(path, version + 1)
+     # Is there already a version with this name?
+     if os.path.exists(new_path):
+         # Yes. Rotate it out of the way first!
+         rotate(path, version + 1)
+     # Now we can rename the version safely.
+     shutil.move(old_path, new_path)
+```
+花几分钟时间研究一下上面的代码和注释。`rotate`函数使用了递归函数通过的技术：第二个参数用于处理递归的情形，在这个示例中，即文件的版本号被轮换。该参数的默认值为`0`，它表示文件的当前版本。当调用该函数时（与函数调用自己的情况不同），不需要指定该参数的值。例如，可以直接调用`rotate("web.log")`。
+
+该函数检查正在被轮换的文件是否确实存在，如果该文件不存在，则引发异常。假设希望轮换一个不确定是否存在的系统日志文件。解决该问题的一种可能方法是在该日志文件不存在时，创建一个空的日志文件。回忆一下，当以写方式打开一个并不存在的文件时，Python会自动创建它。如果没有向新文件中输入内容，它将为空。下面是一个轮换可能存在的日志文件函数，如果不存在，首先要创建日志文件。它使用之前编写的`rotate`函数。
+
+「LatestType Page-146」
 ##### 8.3.6 创建和删除目录
 
 ##### 8.3.7 通配
